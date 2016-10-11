@@ -10,21 +10,21 @@
  */
 
 
-
-import java.io.InputStream;
-
 import edu.cmu.sphinx.api.Configuration;
+import edu.cmu.sphinx.api.LiveSpeechRecognizer;
 import edu.cmu.sphinx.api.SpeechResult;
 import edu.cmu.sphinx.api.StreamSpeechRecognizer;
 import edu.cmu.sphinx.decoder.adaptation.Stats;
 import edu.cmu.sphinx.decoder.adaptation.Transform;
 import edu.cmu.sphinx.result.WordResult;
 
+import java.io.InputStream;
+
 /**
  * A simple example that shows how to transcribe a continuous audio file that
  * has multiple utterances in it.
  */
-public class TranscriberDemo {
+public class TranscriberDemoRT {
 
     public static void main(String[] args) throws Exception {
         System.out.println("Loading models...");
@@ -39,15 +39,15 @@ public class TranscriberDemo {
         // configuration.setAcousticModelPath("file:en-us");
 
         configuration
-                .setDictionaryPath("resource:/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict");
+                .setDictionaryPath("5186.dic");
         configuration
-                .setLanguageModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us.lm.bin");
+                .setLanguageModelPath("5186.lm");
 
         StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(
                 configuration);
-        InputStream stream = TranscriberDemo.class
-                .getResourceAsStream("/edu/cmu/sphinx/demo/aligner/10001-90210-01803.wav");
-        stream.skip(44);
+        InputStream stream = TranscriberDemoRT.class
+                .getResourceAsStream("ginGameOct10.wav");
+        // stream.skip(44);
 
         // Simple recognition with generic model
         recognizer.startRecognition(stream);
@@ -67,34 +67,28 @@ public class TranscriberDemo {
 
         }
         recognizer.stopRecognition();
+        System.out.println("start with mic ... ");
+        LiveSpeechRecognizer recognizer2 = new LiveSpeechRecognizer(configuration);
+// Start recognition process pruning previously cached data.
+        recognizer2.startRecognition(true);
+        SpeechResult result2 = recognizer2.getResult();
+// Pause recognition process. It can be resumed then with startRecognition(false).
+        while ((result2 = recognizer2.getResult()) != null) {
 
-        // Live adaptation to speaker with speaker profiles
+            System.out.format("Hypothesis: %s\n", result2.getHypothesis());
 
-        stream = TranscriberDemo.class
-                .getResourceAsStream("/edu/cmu/sphinx/demo/aligner/10001-90210-01803.wav");
-        stream.skip(44);
+            System.out.println("List of recognized words and their times:");
+            for (WordResult r : result2.getWords()) {
+                System.out.println(r);
+            }
 
-        // Stats class is used to collect speaker-specific data
-        Stats stats = recognizer.createStats(1);
-        recognizer.startRecognition(stream);
-        while ((result = recognizer.getResult()) != null) {
-            stats.collect(result);
+            System.out.println("Best 3 hypothesis:");
+            for (String s : result2.getNbest(3))
+                System.out.println(s);
+            //recognizer2.startRecognition(false);
+            break;
         }
-        recognizer.stopRecognition();
-
-        // Transform represents the speech profile
-        Transform transform = stats.createTransform();
-        recognizer.setTransform(transform);
-
-        // Decode again with updated transform
-        stream = TranscriberDemo.class
-                .getResourceAsStream("/edu/cmu/sphinx/demo/aligner/10001-90210-01803.wav");
-        stream.skip(44);
-        recognizer.startRecognition(stream);
-        while ((result = recognizer.getResult()) != null) {
-            System.out.format("Hypothesis: %s\n", result.getHypothesis());
-        }
-        recognizer.stopRecognition();
+        recognizer2.stopRecognition();
 
     }
 }

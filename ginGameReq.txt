@@ -1,0 +1,21 @@
+1) Setup a playing surface with ten spaces for the oppossing player (OP).
+2) Setup a playing surface with ten spaces for the computer assisted player (CAP).
+3) on the right side is a log in desending sequence the list the spoken commands.
+4) Spoken command 'deal' resets the game.
+5) Every game is stored for future data analysis.
+6) After the deal command, the next voice commands are that of the cards.
+7) The cards are displayed in the order called.
+8) Next command is 'order by suit' or 'order by sequence'.
+9) If a card is missing the application will highligh the space and update with the next card voice command.
+10) If a card has to be changed, the 'change <card1> for <card2>' or the 'change blank <card>'. 
+11) To move a card, 'move <card> <n spaces> <left/right>.
+12) After the deal, the next command is 'take <card>' if drawn from the pile, draw <card> is taken from the deck
+or pass or wait if the CAP is not the dealer.
+13) Any command can have the OP (Opposing player) qualifier to identify draw or take <card> plus the discard <card>.
+14) Playing surface will show 31 spaces that comprised the discards.
+15) Playing surface will show the OP's hand as known.
+16) Playing surface will show probobility, stats and recommendations.
+17) Command discard <card> gin OP <cards ...> 
+18) Command done.
+19) Second proto - Setup a window that has four rows and 13 columns. Update the cells with * based on the commands.
+20) First create the command log.
