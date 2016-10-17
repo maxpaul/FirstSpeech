@@ -86,7 +86,7 @@ public class TranscriberDemoRT {
             for (String s : result2.getNbest(3))
                 System.out.println(s);
             //recognizer2.startRecognition(false);
-            break;
+          //  break;
         }
         recognizer2.stopRecognition();
 

@@ -1,0 +1,157 @@
+Language model created by QuickLM on Wed Oct 12 09:34:27 EDT 2016
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 33 sentences and 35 words
+
+\data\
+ngram 1=35
+ngram 2=66
+ngram 3=33
+
+\1-grams:
+-0.7782 </s> -0.3010
+-0.7782 <s> -0.2218
+-2.2967 ACE -0.2218
+-2.2967 BLANK -0.2218
+-2.2967 CHANGE -0.2218
+-2.2967 CLUB -0.2218
+-2.2967 DEAL -0.2218
+-2.2967 DIAMOND -0.2218
+-2.2967 DISCARD -0.2218
+-2.2967 DRAW -0.2218
+-2.2967 EIGHT -0.2218
+-2.2967 FIVE -0.2218
+-2.2967 FOUR -0.2218
+-2.2967 HEART -0.2218
+-2.2967 JACK -0.2218
+-2.2967 KING -0.2218
+-2.2967 LEFT -0.2218
+-2.2967 MOVE -0.2218
+-2.2967 NINE -0.2218
+-2.2967 ORDER -0.2218
+-2.2967 OTHER -0.2218
+-2.2967 PASS -0.2218
+-2.2967 QUEEN -0.2218
+-2.2967 RIGHT -0.2218
+-2.2967 SEQUENCE -0.2218
+-2.2967 SEVEN -0.2218
+-2.2967 SIX -0.2218
+-2.2967 SORT -0.2218
+-2.2967 SPADE -0.2218
+-2.2967 SUIT -0.2218
+-2.2967 TAKE -0.2218
+-2.2967 TEN -0.2218
+-2.2967 THREE -0.2218
+-2.2967 TWO -0.2218
+-2.2967 WAIT -0.2218
+
+\2-grams:
+-1.8195 <s> ACE 0.0000
+-1.8195 <s> BLANK 0.0000
+-1.8195 <s> CHANGE 0.0000
+-1.8195 <s> CLUB 0.0000
+-1.8195 <s> DEAL 0.0000
+-1.8195 <s> DIAMOND 0.0000
+-1.8195 <s> DISCARD 0.0000
+-1.8195 <s> DRAW 0.0000
+-1.8195 <s> EIGHT 0.0000
+-1.8195 <s> FIVE 0.0000
+-1.8195 <s> FOUR 0.0000
+-1.8195 <s> HEART 0.0000
+-1.8195 <s> JACK 0.0000
+-1.8195 <s> KING 0.0000
+-1.8195 <s> LEFT 0.0000
+-1.8195 <s> MOVE 0.0000
+-1.8195 <s> NINE 0.0000
+-1.8195 <s> ORDER 0.0000
+-1.8195 <s> OTHER 0.0000
+-1.8195 <s> PASS 0.0000
+-1.8195 <s> QUEEN 0.0000
+-1.8195 <s> RIGHT 0.0000
+-1.8195 <s> SEQUENCE 0.0000
+-1.8195 <s> SEVEN 0.0000
+-1.8195 <s> SIX 0.0000
+-1.8195 <s> SORT 0.0000
+-1.8195 <s> SPADE 0.0000
+-1.8195 <s> SUIT 0.0000
+-1.8195 <s> TAKE 0.0000
+-1.8195 <s> TEN 0.0000
+-1.8195 <s> THREE 0.0000
+-1.8195 <s> TWO 0.0000
+-1.8195 <s> WAIT 0.0000
+-0.3010 ACE </s> -0.3010
+-0.3010 BLANK </s> -0.3010
+-0.3010 CHANGE </s> -0.3010
+-0.3010 CLUB </s> -0.3010
+-0.3010 DEAL </s> -0.3010
+-0.3010 DIAMOND </s> -0.3010
+-0.3010 DISCARD </s> -0.3010
+-0.3010 DRAW </s> -0.3010
+-0.3010 EIGHT </s> -0.3010
+-0.3010 FIVE </s> -0.3010
+-0.3010 FOUR </s> -0.3010
+-0.3010 HEART </s> -0.3010
+-0.3010 JACK </s> -0.3010
+-0.3010 KING </s> -0.3010
+-0.3010 LEFT </s> -0.3010
+-0.3010 MOVE </s> -0.3010
+-0.3010 NINE </s> -0.3010
+-0.3010 ORDER </s> -0.3010
+-0.3010 OTHER </s> -0.3010
+-0.3010 PASS </s> -0.3010
+-0.3010 QUEEN </s> -0.3010
+-0.3010 RIGHT </s> -0.3010
+-0.3010 SEQUENCE </s> -0.3010
+-0.3010 SEVEN </s> -0.3010
+-0.3010 SIX </s> -0.3010
+-0.3010 SORT </s> -0.3010
+-0.3010 SPADE </s> -0.3010
+-0.3010 SUIT </s> -0.3010
+-0.3010 TAKE </s> -0.3010
+-0.3010 TEN </s> -0.3010
+-0.3010 THREE </s> -0.3010
+-0.3010 TWO </s> -0.3010
+-0.3010 WAIT </s> -0.3010
+
+\3-grams:
+-0.3010 <s> ACE </s>
+-0.3010 <s> BLANK </s>
+-0.3010 <s> CHANGE </s>
+-0.3010 <s> CLUB </s>
+-0.3010 <s> DEAL </s>
+-0.3010 <s> DIAMOND </s>
+-0.3010 <s> DISCARD </s>
+-0.3010 <s> DRAW </s>
+-0.3010 <s> EIGHT </s>
+-0.3010 <s> FIVE </s>
+-0.3010 <s> FOUR </s>
+-0.3010 <s> HEART </s>
+-0.3010 <s> JACK </s>
+-0.3010 <s> KING </s>
+-0.3010 <s> LEFT </s>
+-0.3010 <s> MOVE </s>
+-0.3010 <s> NINE </s>
+-0.3010 <s> ORDER </s>
+-0.3010 <s> OTHER </s>
+-0.3010 <s> PASS </s>
+-0.3010 <s> QUEEN </s>
+-0.3010 <s> RIGHT </s>
+-0.3010 <s> SEQUENCE </s>
+-0.3010 <s> SEVEN </s>
+-0.3010 <s> SIX </s>
+-0.3010 <s> SORT </s>
+-0.3010 <s> SPADE </s>
+-0.3010 <s> SUIT </s>
+-0.3010 <s> TAKE </s>
+-0.3010 <s> TEN </s>
+-0.3010 <s> THREE </s>
+-0.3010 <s> TWO </s>
+-0.3010 <s> WAIT </s>
+
+\end\
