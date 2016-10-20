@@ -25,3 +25,5 @@ deck
 pile
 end
 set
+fix
+finish

@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -18,13 +19,19 @@ public class GinMain extends Application {
     private Stage primaryStage;
     final static Logger log = Logger.getLogger(GinMain.class.getName());
 
-    private static boolean endLess = true;
 
     @Override
     public void start(Stage stage) throws IOException {
         startGinMng(stage);
     }
+    // not woring ....
+    public void reload() throws IOException {
+        URL location = getClass().getResource("Board.fxml");
+        FXMLLoader loader = new FXMLLoader(location);
+        mainLayout = loader.load();
+        primaryStage.getScene().setRoot(mainLayout);
 
+    }
     public void startGinMng(Stage primaryStage) throws IOException {
         // Load the GUI. The MainController class will be automatically created and wired up.
         this.primaryStage = primaryStage;
@@ -35,6 +42,7 @@ public class GinMain extends Application {
         mainLayout = loader.load();
 
         controller = loader.getController();
+
         controller.setMain(this);
 
         Scene scene = new Scene(mainLayout);
@@ -43,7 +51,7 @@ public class GinMain extends Application {
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(event -> {
-            endLess = false;
+            //endLess = false;
         });
 
     }
