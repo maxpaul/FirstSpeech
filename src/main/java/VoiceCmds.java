@@ -1,33 +1,35 @@
 import org.apache.log4j.Logger;
-
 import java.util.*;
-import java.util.regex.PatternSyntaxException;
+
 
 /**
  * Created by advman on 2016-10-11.
  */
 public class VoiceCmds {
-    public List<String> curCmds;
-    public String gameStage;
-    public boolean fstPass;
+    private List<String> curCmds;
+    private String gameStage;
+    private boolean fstPass;
     // true = CAP(computer assisted player), false= OPP(opposing player)
-    public boolean whosTurn = true;
+    private boolean whosTurn = true;
     // set flag in insure CAP does a [PILE PASS] combination
     // set to true to allow processing during PASSING game stage
-    public boolean pileDone = true;
+    private boolean pileDone = true;
     public String prevVoice;
     public String cardValue;
     public int capIdx;
     public int oppIdx;
     public int dissIdx;
     public String lastCmd;
+    public String sortSts;
 
     LinkedList<String> handCap;
+    LinkedList<String> handCapSort;
     LinkedList<String> handOpp;
     LinkedList<String> dissOpp;
     LinkedList<String> capLstCmds;
     LinkedList<String> oppLstCmds;
 
+    LinkedList<String> msgQueue =new LinkedList<>();
     List<String> deckStr;
     LinkedList<String> cardStatus;
 
@@ -38,6 +40,9 @@ public class VoiceCmds {
 
     public VoiceCmds() {
         handCap = new LinkedList<>();
+        // declare and initalize the handcap sort flag
+        handCapSort = new LinkedList<>();
+        for (int i=0;i<11;i++) handCapSort.add(i,"");
         handOpp = new LinkedList<>();
         dissOpp = new LinkedList<>();
         capLstCmds = new LinkedList<>();
@@ -46,6 +51,7 @@ public class VoiceCmds {
         setHands(0, "", handOpp);
         setHands(0, "", dissOpp);
         setGameStage("LOADING");
+        setSortSts("");
         setLastCmd("");
         setFirstPass(true);
         setPrevVoice("");
@@ -54,45 +60,186 @@ public class VoiceCmds {
         setOppIdx(0);
         setDissIdx(0);
         createDeck();
+        // used to store messages to retrieved by controller.
+        resetMsgQueue();
     }
+    // sort handCap array by rank or suit and rank
+    public void sortHandCap() {
 
-    // sort handCap array by suit and rank
-    public void sortHandCap(List<String> lst) {
-        Collections.sort(lst);
+        List<String> sortedList =new ArrayList<>();
+
+        if(getSortSts().equals("SORTRANK")) { // sort by rank
+            for (String s : handCap) {
+                if (!s.equals("")) {
+                    String[] spl = s.split("\\s+");
+                    int rankIdx = getStrIdxArry(spl[0], RANK);
+                    String splFormt = String.format("%02d", rankIdx);
+                    sortedList.add(splFormt + "!" + s);
+                }
+            }
+            Collections.sort(sortedList);
+            sortedList = sort3and4(sortedList);
+        } else { // sort by suit and Rank
+            for (String s : handCap) {
+                if (!s.equals("")) {
+                    String[] spl = s.split("\\s+");
+                    int suitIdx = getStrIdxArry(spl[1], SUIT);
+                    int rankIdx = getStrIdxArry(spl[0], RANK);
+                    String splFormt = String.format("%02d", rankIdx);
+                    sortedList.add(suitIdx + splFormt + "!" + s);
+                }
+            }
+            Collections.sort(sortedList);
+            sortedList = sortSeq(sortedList);
+        }
+        Collections.sort(sortedList);
         resetHands(handCap);
+        resetHands(handCapSort);
+        for (String s : sortedList) {
+            // eg. "00!ACE CLUB *"
+            String[] spl = s.split("!");
+
+            // eg. [00] [ACE CLUB *]
+            String[] spl2 = spl[1].split("\\s+");
+
+            //eg. [ACE] [CLUB] [*]
+            handCap.add(spl2[0]+" "+spl2[1]); // "ACE CLUB"
+
+            // add the sort indicator
+            if (spl2.length==3) {
+                handCapSort.add(spl2[2]); // "*"
+            } else {
+                handCapSort.add("");
+            }
+        }
+    }
+    // Flag sort rank 3&4 of kind
+    public List<String> sort3and4(List<String> lst) {
+
+        Integer[] rankCnt = new Integer[14];
+        for (int i=0; i<rankCnt.length; i++) rankCnt[i] = 0;
+
         for (String s : lst) {
             String[] spl = s.split("!");
-            handCap.add(spl[1]);
+            int rankInt = Integer.parseInt(spl[0]);
+            rankCnt[rankInt]++;
         }
+        List<String> sorted3and4 = new ArrayList<>();
+        List<String> rankCnt3or4 = new ArrayList<>();
+        for (int i=0; i<rankCnt.length; i++) {
+            if (rankCnt[i] > 2) rankCnt3or4.add(String.format("%02d", i));
+        }
+        for (String s : lst) {
+            String[] spl = s.split("!");
+
+            if (getStrIdx(spl[0], rankCnt3or4) != -1) {
+                sorted3and4.add("10" + s + " *");
+            } else {
+                sorted3and4.add("11" + s);
+            }
+        }
+        return sorted3and4;
+    }
+    // Flag sequential incremental suits of 3 or more.
+    public List<String> sortSeq(List<String> lst) {
+        // Create a temp array that checks if the sequence sorted array
+        // has sequenctial incremental values eg. 4-5-6.
+        // An array of x,x,x,4,5,6,x,x,x,x
+        // will have   1,1,1,1,2,3,1,1,1,1
+        Integer[] seqCntArry = new Integer[10];
+        for (int i=0; i<seqCntArry.length; i++) seqCntArry[i] = 0;
+        int prevSuit =-1;
+        int prevRank =-1;
+        int seqCnt=0;
+
+        for (int i=0;i<lst.size();i++) {
+            String[] spl = lst.get(i).split("!");
+            int suitInt = Integer.parseInt(spl[0].substring(0, 1));
+            int rankInt = Integer.parseInt(spl[0].substring(1,3));
+            if (suitInt==prevSuit && rankInt-1 == prevRank) {
+                seqCnt++;
+            } else {
+                seqCnt =1;
+            }
+            prevSuit=suitInt;
+            prevRank=rankInt;
+            seqCntArry[i] = seqCnt;
+
+            msgQueue.add(lst.get(i)+" suit int "+ suitInt+" rank int "+rankInt);
+        }
+        for (int i=0;i<seqCntArry.length;i++) msgQueue.add(seqCntArry[i].toString());
+
+        // Setup temp array to store the idx values of the cards to be flagged
+        // as sequenctial incremental sets of 3 or more.
+        Integer[] seqUpdArry = new Integer[10];
+        for (int i=0; i<seqUpdArry.length; i++) seqUpdArry[i] = 0;
+        // starting at relative postion 3 because that is the first possible
+        // occurence of a count value of 3
+        for (int i=2;i<seqCntArry.length;i++) {
+            if (seqCntArry[i]>2 && i+2>seqCntArry.length) {
+                seqUpdArry[i]=seqCntArry[i];
+                i++;
+            } else {
+                if (seqCntArry[i]>2 && seqCntArry[i+1]<seqCntArry[i]) seqUpdArry[i]=seqCntArry[i];
+            }
+        }
+
+        for (int i=0;i<seqUpdArry.length;i++) msgQueue.add(seqUpdArry[i].toString());
+        // Iterate back from the index value for the count value 3 or more
+        for (int i=0;i<seqUpdArry.length;i++) {
+            if (seqUpdArry[i] !=0) {
+                for (int j=i;j>i-seqUpdArry[i];j--) {
+                    lst.set(j,lst.get(j)+" *");
+                }
+            }
+        }
+        // if the elem has a * add 10 to the existing sort value or 11
+        // example 000!ACE Club becomes 10000!ACE CLUB
+        for (int i=0;i<lst.size();i++) {
+            String[] spl = lst.get(i).split("!");
+            String[] splAgn =spl[1].split("\\s+");
+            if (splAgn.length==3) {
+                lst.set(i,"10"+ lst.get(i));
+            } else {
+                lst.set(i,"11"+ lst.get(i));
+            }
+        }
+        for (String s : lst) msgQueue.add(s);
+        return lst;
+    }
+    public void resetMsgQueue() {
+        while (!msgQueue.isEmpty()) {
+            msgQueue.removeFirst();
+        }
+    }
+    public LinkedList<String> getMsgQueue() {
+        return msgQueue;
     }
     // set the last command
     public void setLastCmd(String str) {
         this.lastCmd = str;
     }
-
     // set the last command
     public String getLastCmd() {
         return lastCmd;
     }
-
     // reset the card status on deal
     public void resetCardStatus() {
         for (int i = 1; i < cardStatus.size(); i++) {
             setCardStatus(i, "DECK");
         }
     }
-
+    // status of sort equal SORT or SORTRANK or ""
+    public void setSortSts(String sortSts) {this.sortSts = sortSts;;}
+    public String getSortSts() {return sortSts;}
     // set card status
     public void setCardStatus(int idx, String sts) {
         cardStatus.set(idx, sts);
     }
-
     // return the status value of the card in relation to the deck
     public String getCardStatus(int idx) {
         return cardStatus.get(idx);
     }
-
-
     public void createDeck() {
         deckStr = new ArrayList<>();
         cardStatus = new LinkedList<>();
@@ -127,8 +274,6 @@ public class VoiceCmds {
         }
         setHands(0, "", lst);
     }
-
-
     public void setHands(int idx, String str, LinkedList<String> lst) {
         lst.add(idx, str);
     }
@@ -168,40 +313,35 @@ public class VoiceCmds {
     public void setFirstPass(boolean fstPass) {
         this.fstPass = fstPass;
     }
-
     public boolean getFirstPass() {
         return fstPass;
     }
-
     public void setPrevVoice(String prevVoice) {
         this.prevVoice = prevVoice;
     }
-
     public String getPrevVoice() {
         return prevVoice;
     }
-
     public void setCardValue(String cardValue) {
         this.cardValue = cardValue;
     }
-
     public String getCardValue() {
         return cardValue;
     }
-
     public static boolean useList(String[] arr, String targetValue) {
         return Arrays.asList(arr).contains(targetValue);
     }
-
     public void setGameStage(String gameStage) {
         this.gameStage = gameStage;
     }
-
     public String getGameStage() {
         return gameStage;
     }
     public List<String> getHandCap() {
         return handCap;
+    }
+    public List<String> getHandCapSort() {
+        return handCapSort;
     }
     public List<String> getDissOpp() {
         return dissOpp;
@@ -219,7 +359,7 @@ public class VoiceCmds {
         return oppLstCmds;
     }
     public void fixCardStr(LinkedList<String> lst) {
-
+        log.trace("FIX");
         dissOpp.set(0,"");
         if (lst.get(0).equals("PASS")) {
             String[] spl = lst.get(1).split("\\s+");
@@ -285,7 +425,7 @@ public class VoiceCmds {
 
     }
     public void processCmds(String cmd, String card) {
-        List<String> sorting;
+        //List<String> sorting;
         setLastCmd("");
 
         switch (cmd) {
@@ -360,36 +500,22 @@ public class VoiceCmds {
                         }
                     }
                 }
+                break;
 
-                break;
             case "SORTRANK":
-                if (!getGameStage().equals("PASSING")) break;
-                sorting = new ArrayList<>();
-                for (String s : handCap) {
-                    if (!s.equals("")) {
-                        String[] spl = s.split("\\s+");
-                        int rankIdx = getStrIdxArry(spl[0], RANK);
-                        String splFormt = String.format("%02d", rankIdx);
-                        sorting.add(splFormt + "!" + s);
-                    }
-                }
-                sortHandCap(sorting);
-                setLastCmd(cmd);
+                if (!getGameStage().equals("PASSING") && !getGameStage().equals("PLAYING")) break;
+                if (!handCap.get(0).equals("") || !handOpp.get(0).equals("")) break;
+
+                setSortSts(cmd);
+                sortHandCap();
                 break;
+
             case "SORT":
-                if (!getGameStage().equals("PASSING")) break;
-                sorting = new ArrayList<>();
-                for (String s : handCap) {
-                    if (!s.equals("")) {
-                        String[] spl = s.split("\\s+");
-                        int suitIdx = getStrIdxArry(spl[1], SUIT);
-                        int rankIdx = getStrIdxArry(spl[0], RANK);
-                        String splFormt = String.format("%02d", rankIdx);
-                        sorting.add(suitIdx + splFormt + "!" + s);
-                    }
-                }
-                sortHandCap(sorting);
-                setLastCmd(cmd);
+                if (!getGameStage().equals("PASSING") && !getGameStage().equals("PLAYING")) break;
+                if (!handCap.get(0).equals("") ||!handOpp.get(0).equals("")) break;
+
+                setSortSts(cmd);
+                sortHandCap();
                 break;
             case "SET":
                 if (!getGameStage().equals("PASSING")) break;
@@ -400,25 +526,26 @@ public class VoiceCmds {
                 break;
             case "DECK":
                 if (!getGameStage().equals("PLAYING")) break;
-                if (!whosTurn) break; // not a valid opp command
+                // Humm needs to be fixed.
+                if (!whosTurn) break; // only a valid opp command.
                 if (card.equals("")) {
                     setLastCmd(cmd);
                     saveLstCmd(cmd);
                 } else {
                     if (getStrIdx(card, deckStr) == -1) break;
                     if (getGameStage().equals("PLAYING") && !getCardStatus(getStrIdx(card, deckStr)).equals("DECK")) break;
-                    saveLstCmd(card + " " + getCardStatus(getStrIdx(card, deckStr)));
+                    saveLstCmd(card + " " + getCardStatus(getStrIdx(card, deckStr))); // used for the FIX command.
                     setCardStatus(getStrIdx(card, deckStr), "CAP");
                     handCap.set(0,card);
                 }
 
                 break;
             case "PILE":
+
                 if (getGameStage().equals("PLAYING") || getGameStage().equals("PASSING")) {
-
+                    if (card.equals("")) setLastCmd(cmd);
                     if (card.equals("") && getGameStage().equals("PASSING")) {
-                        setLastCmd(cmd);
-
+                        // setLastCmd(cmd);
                     } else {
                         if (whosTurn) { // CAP if true
                             if (card.equals("") && !dissOpp.get(1).equals("")) card=dissOpp.get(1);
@@ -450,9 +577,16 @@ public class VoiceCmds {
             case "PASS":
                 if (getGameStage().equals("PASSING") || getGameStage().equals("PLAYING")) {
                     if (card.equals("")) {
+                        if (getGameStage().equals("PASSING")) {
+                            setGameStage("PLAYING");
+                            log.trace(cmd);
+                            setTurn();
+                            break;
+                        }
                         setLastCmd(cmd);
                         saveLstCmd(cmd);
                     } else {
+
                         if (!getGameStage().equals("PLAYING")) setGameStage("PLAYING");
                         if (whosTurn) { // CAP if true
                             if (handCap.get(0).equals("")) {
@@ -536,6 +670,7 @@ public class VoiceCmds {
                                 String cardLst = spl[0] + " " + spl[1];
                                 setCardStatus(getStrIdx(cardLst, deckStr), spl[2]);
                                 handCap.set(0,"");
+                                log.trace("FIX");
                                 break;
                             } else {
                                 if (capLstCmds.get(0).equals("PILE")) {
@@ -544,6 +679,7 @@ public class VoiceCmds {
                                         String cardLst = spl[0] + " " + spl[1];
                                         setCardStatus(getStrIdx(cardLst, deckStr), spl[2]);
                                         handCap.set(0,"");
+                                        log.trace("FIX");
                                         break;
                                     }
                                 }
@@ -564,6 +700,7 @@ public class VoiceCmds {
                                     setCardStatus(getStrIdx(cardLst, deckStr), spl[2]);
                                     handOpp.set(0,"");
                                     dissOpp.set(0,cardLst);
+                                    log.trace("FIX");
                                     break;
                                 }
                             }
@@ -615,6 +752,10 @@ public class VoiceCmds {
         }
 
     }
+    /*
+    The method is used to ensure the format the command to be processes by the Fix
+    requset.
+     */
     public void ensureCmdFmt(LinkedList<String> lst, String str) {
         if (lst.isEmpty()) {
             if (str.equals("PASS") || str.equals("DECK") || str.equals("PILE")) lst.add(str);
@@ -636,19 +777,29 @@ public class VoiceCmds {
             }
         }
     }
+    /*
+    The method is used to process the FIX command.  This command will back out
+    the last commands processed.
+     */
     public void saveLstCmd(String str) {
         if(getTurn()) ensureCmdFmt(capLstCmds, str);
         if(!getTurn()) ensureCmdFmt(oppLstCmds, str);
     }
-
+    /*
+    This method is structured to accept single word commands such as DEAL or PASS.
+    Some commands must have a card association while others do not for example SORT.
+    This method will process the single word command in the first pass and wait for
+    the card in the next processing cycle.  Commands can have single cards, many cards or none.
+    The commands that require cards will be saved during processing and retrieved during
+    during the subsequent pass.  For example, if the result is a command then process the
+    command and save it.  If the result is a card process the card based on the last saved
+    command.  If a card has no proceed command it is ignored.
+     */
     public List<String> splitResult(String vResult) {
         List<String> resultList = new ArrayList<>();
-        try {
-            String[] splitArray = vResult.split("\\s+");
-            resultList = Arrays.asList(splitArray);
-        } catch (PatternSyntaxException ex) {
-            //
-        }
+        String[] splitArray = vResult.split("\\s+");
+        resultList = Arrays.asList(splitArray);
+
         List<String> lnkResult = validVoiceResults(resultList);
         List<String> lnkResultWithIdx = new ArrayList<>();
 
@@ -661,6 +812,7 @@ public class VoiceCmds {
                 }
 
             } else { // it's a card
+                // DEALING and ending must accept multiple cards.
                 if (getGameStage().equals("DEALING") || getGameStage().equals("ENDING")) {
                     switch (getGameStage()) {
                         case "DEALING":
@@ -721,7 +873,6 @@ public class VoiceCmds {
         }
         return lnkResultWithIdx;
     }
-
     public LinkedList<String> validVoiceResults(List<String> resultList) {
         LinkedList<String> lnklist = new LinkedList<>();
         Iterator<String> vResultIt = resultList.iterator();
@@ -774,43 +925,5 @@ public class VoiceCmds {
         }
 
         return lnklistCard;
-    }
-
-    public void setCurCmds(List<String> curCmds) {
-        System.out.println("Valid voice cmds ");
-        Iterator<String> iterator = curCmds.iterator();
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
-        }
-        this.curCmds = curCmds;
-    }
-
-    public List<String> getCurCmds() {
-        return curCmds;
-    }
-
-    public String getHypoResult(List<String> hypoResult) {
-        String theResult = "unknown";
-        Iterator<String> hypoIt = hypoResult.iterator();
-        while (hypoIt.hasNext() && theResult.equals("unknown")) {
-            String hypoValue = hypoIt.next().replaceAll("[^A-Z]+", "");
-            if (isCurCmdValid(hypoValue)) {
-                theResult = hypoValue;
-                break;
-            }
-        }
-        return theResult;
-    }
-
-    public boolean isCurCmdValid(String hypoValue) {
-        boolean isValidCmd = false;
-        Iterator<String> curCmdsIt = getCurCmds().iterator();
-        while (curCmdsIt.hasNext()) {
-            if (curCmdsIt.next().equals(hypoValue)) {
-                isValidCmd = true;
-                break;
-            }
-        }
-        return isValidCmd;
     }
 }

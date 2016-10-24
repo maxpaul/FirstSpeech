@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -10,19 +11,27 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 
-<BorderPane minHeight="400.0" minWidth="800.0" prefHeight="483.0" prefWidth="1000.0" stylesheets="@gin.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GinController">
+<BorderPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@gin.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GinController">
    <center>
-      <SplitPane dividerPositions="0.7074148296593187" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.2995991983967936" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <VBox prefHeight="442.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <AnchorPane prefHeight="45.0" prefWidth="232.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="370.0" prefWidth="600.0">
                <children>
-                  <SplitPane dividerPositions="0.5" layoutX="82.0" layoutY="76.0" orientation="VERTICAL" prefHeight="398.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="800.0">
+                  <VBox prefHeight="380.0" prefWidth="702.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                      <AnchorPane prefHeight="110.0" prefWidth="702.0">
                            <children>
-                              <GridPane fx:id="capHandGrid" layoutX="109.0" layoutY="52.0" prefHeight="194.0" prefWidth="456.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <GridPane fx:id="capHandGrid" layoutX="109.0" layoutY="52.0" prefHeight="60.0" prefWidth="702.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                                     <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                                     <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                                     <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
@@ -35,15 +44,113 @@
                                     <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                                 </columnConstraints>
                                 <rowConstraints>
-                                  <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="28.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                  <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="65.0" valignment="TOP" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="18.0" valignment="TOP" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="28.0" valignment="CENTER" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="73.0" valignment="TOP" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Label fx:id="capTurn" alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="87.0" />
-                                    <Label text="1" GridPane.columnIndex="1" />
+                                    <StackPane fx:id="oppImg02SP" GridPane.columnIndex="1">
+                                       <children>
+                                          <ImageView fx:id="oppImg02" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@imgs/deck01/dsc02058.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <StackPane fx:id="oppImg04SP" GridPane.columnIndex="3">
+                                       <children>
+                                          <ImageView fx:id="oppImg04" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@imgs/deck01/dsc02058.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <StackPane fx:id="oppImg05SP" layoutX="80.0" layoutY="10.0" GridPane.columnIndex="4">
+                                       <children>
+                                          <ImageView fx:id="oppImg05" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@imgs/deck01/dsc02058.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <StackPane fx:id="oppImg06SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="5">
+                                       <children>
+                                          <ImageView fx:id="oppImg06" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@imgs/deck01/dsc02058.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <StackPane fx:id="oppImg07SP" layoutX="90.0" layoutY="20.0" GridPane.columnIndex="6">
+                                       <children>
+                                          <ImageView fx:id="oppImg07" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@imgs/deck01/dsc02058.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <StackPane fx:id="oppImg08SP" layoutX="80.0" layoutY="10.0" GridPane.columnIndex="7">
+                                       <children>
+                                          <ImageView fx:id="oppImg08" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@imgs/deck01/dsc02058.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <StackPane fx:id="oppImg09SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="8">
+                                       <children>
+                                          <ImageView fx:id="oppImg09" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@imgs/deck01/dsc02058.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <StackPane fx:id="oppImg10SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="9">
+                                       <children>
+                                          <ImageView fx:id="oppImg10" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@imgs/deck01/dsc02058.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <StackPane fx:id="oppImg03SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="2">
+                                       <children>
+                                          <ImageView fx:id="oppImg03" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@imgs/deck01/dsc02058.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                    <StackPane fx:id="oppImg01SP" layoutX="10.0" layoutY="10.0">
+                                       <children>
+                                          <ImageView fx:id="oppImg01" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@imgs/deck01/dsc02058.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </StackPane>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <GridPane fx:id="capHandGrid11" prefHeight="101.0" prefWidth="698.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Label fx:id="disGameStage" alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="87.0">
+                                       <font>
+                                          <Font size="10.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="A" GridPane.columnIndex="1" />
                                     <Label text="2" GridPane.columnIndex="2" />
                                     <Label text="3" GridPane.columnIndex="3" />
                                     <Label text="4" GridPane.columnIndex="4" />
@@ -53,85 +160,208 @@
                                     <Label text="8" GridPane.columnIndex="8" />
                                     <Label text="9" GridPane.columnIndex="9" />
                                     <Label text="10" GridPane.columnIndex="10" />
-                                    <Label fx:id="cap00" alignment="CENTER" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="1" />
-                                    <Label fx:id="cap01" alignment="CENTER" layoutX="31.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <Label fx:id="cap02" alignment="CENTER" layoutX="72.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <Label fx:id="cap03" alignment="CENTER" layoutX="113.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                    <Label fx:id="cap04" alignment="CENTER" layoutX="154.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                    <Label fx:id="cap05" alignment="CENTER" layoutX="195.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                    <Label fx:id="cap06" alignment="CENTER" layoutX="236.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                    <Label fx:id="cap07" alignment="CENTER" layoutX="277.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-                                    <Label fx:id="cap08" alignment="CENTER" layoutX="319.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="8" GridPane.rowIndex="1" />
-                                    <Label fx:id="cap09" alignment="CENTER" layoutX="361.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1" />
-                                    <Label fx:id="cap10" alignment="CENTER" layoutX="403.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="10" GridPane.rowIndex="1" />
-                                    <Label fx:id="oppTurn" alignment="CENTER" contentDisplay="CENTER" prefHeight="29.0" prefWidth="74.0" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="105.0" text="1" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="12.0" text="2" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="12.0" text="3" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="12.0" text="4" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="12.0" text="5" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="12.0" text="6" GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="12.0" text="7" GridPane.columnIndex="7" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="12.0" text="8" GridPane.columnIndex="8" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="12.0" text="9" GridPane.columnIndex="9" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="12.0" text="10" GridPane.columnIndex="10" GridPane.rowIndex="3" />
-                                    <Label fx:id="opp00" alignment="CENTER" layoutX="42.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="4" />
-                                    <Label fx:id="opp01" alignment="CENTER" layoutX="42.0" layoutY="124.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <Label fx:id="opp02" alignment="CENTER" layoutX="42.0" layoutY="12.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                    <Label fx:id="opp03" alignment="CENTER" layoutX="42.0" layoutY="12.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                                    <Label fx:id="opp04" alignment="CENTER" layoutX="42.0" layoutY="12.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                                    <Label fx:id="opp05" alignment="CENTER" layoutX="42.0" layoutY="12.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                                    <Label fx:id="opp06" alignment="CENTER" layoutX="42.0" layoutY="12.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="4" />
-                                    <Label fx:id="opp07" alignment="CENTER" layoutX="42.0" layoutY="12.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="7" GridPane.rowIndex="4" />
-                                    <Label fx:id="opp08" alignment="CENTER" layoutX="42.0" layoutY="12.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="8" GridPane.rowIndex="4" />
-                                    <Label fx:id="opp09" alignment="CENTER" layoutX="42.0" layoutY="12.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="4" />
-                                    <Label fx:id="opp10" alignment="CENTER" layoutX="42.0" layoutY="12.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="10" GridPane.rowIndex="4" />
+                                    <Label layoutX="433.0" layoutY="14.0" text="J" GridPane.columnIndex="11" />
+                                    <Label layoutX="433.0" layoutY="14.0" text="Q" GridPane.columnIndex="12" />
+                                    <Label layoutX="433.0" layoutY="14.0" text="K" GridPane.columnIndex="13" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" text="Club" GridPane.rowIndex="1" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" text="Diamond" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="10.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" text="Heart" GridPane.rowIndex="3" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" text="Spade" GridPane.rowIndex="4" />
+                                    <Label fx:id="club01" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label fx:id="club02" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <Label fx:id="club03" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <Label fx:id="club04" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                    <Label fx:id="club05" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                    <Label fx:id="club06" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                                    <Label fx:id="club07" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                                    <Label fx:id="club08" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="8" GridPane.rowIndex="1" />
+                                    <Label fx:id="club09" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="9" GridPane.rowIndex="1" />
+                                    <Label fx:id="club10" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="10" GridPane.rowIndex="1" />
+                                    <Label fx:id="club11" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="11" GridPane.rowIndex="1" />
+                                    <Label fx:id="club12" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="12" GridPane.rowIndex="1" />
+                                    <Label fx:id="club13" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="13" GridPane.rowIndex="1" />
+                                    <Label fx:id="dmon01" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon02" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon03" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon04" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon05" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon06" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon07" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon08" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="8" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon09" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="9" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon10" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="10" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon11" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="11" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon12" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="12" GridPane.rowIndex="2" />
+                                    <Label fx:id="dmon13" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="13" GridPane.rowIndex="2" />
+                                    <Label fx:id="heart01" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart02" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart03" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart04" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart05" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart06" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart07" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="7" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart08" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="8" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart09" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="9" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart10" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="10" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart11" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="11" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart12" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="12" GridPane.rowIndex="3" />
+                                    <Label fx:id="heart13" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="13" GridPane.rowIndex="3" />
+                                    <Label fx:id="spade01" alignment="CENTER" contentDisplay="CENTER" layoutX="59.0" layoutY="69.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade02" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade03" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade04" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade05" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade06" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade07" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="7" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade08" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="8" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade09" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="9" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade10" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="10" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade11" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="11" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade12" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="12" GridPane.rowIndex="4" />
+                                    <Label fx:id="spade13" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="13" GridPane.rowIndex="4" />
                                  </children>
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="28.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                 </rowConstraints>
                               </GridPane>
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0">
                            <children>
-                              <SplitPane dividerPositions="0.5" layoutX="356.0" layoutY="-20.0" orientation="VERTICAL" prefHeight="180.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                <items>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                              <ScrollPane prefHeight="109.0" prefWidth="695.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <content>
+                                  <AnchorPane>
                                        <children>
-                                          <GridPane fx:id="capHandGrid1" prefHeight="85.0" prefWidth="1086.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <GridPane fx:id="capHandGrid1" prefHeight="60.0" prefWidth="702.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <children>
-                                                <Label fx:id="disCardCnt" alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="87.0" />
-                                                <Label text="1" GridPane.columnIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="2" />
-                                                <Label text="3" GridPane.columnIndex="3" />
-                                                <Label text="4" GridPane.columnIndex="4" />
-                                                <Label text="5" GridPane.columnIndex="5" />
-                                                <Label text="6" GridPane.columnIndex="6" />
-                                                <Label text="7" GridPane.columnIndex="7" />
-                                                <Label text="8" GridPane.columnIndex="8" />
-                                                <Label text="9" GridPane.columnIndex="9" />
-                                                <Label text="10" GridPane.columnIndex="10" />
-                                                <Label fx:id="oppDiss00" alignment="CENTER" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss01" alignment="CENTER" layoutX="31.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss02" alignment="CENTER" layoutX="72.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss03" alignment="CENTER" layoutX="113.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss04" alignment="CENTER" layoutX="154.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss05" alignment="CENTER" layoutX="195.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss06" alignment="CENTER" layoutX="236.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss07" alignment="CENTER" layoutX="277.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss08" alignment="CENTER" layoutX="319.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="8" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss09" alignment="CENTER" layoutX="361.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss10" alignment="CENTER" layoutX="403.0" layoutY="31.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="10" GridPane.rowIndex="1" />
-                                                <Label layoutX="433.0" layoutY="14.0" text="11" GridPane.columnIndex="11" />
-                                                <Label layoutX="433.0" layoutY="14.0" text="12" GridPane.columnIndex="12" />
-                                                <Label layoutX="433.0" layoutY="14.0" text="13" GridPane.columnIndex="13" />
-                                                <Label layoutX="433.0" layoutY="14.0" text="14" GridPane.columnIndex="14" />
-                                                <Label layoutX="433.0" layoutY="14.0" text="15" GridPane.columnIndex="15" />
-                                                <Label layoutX="433.0" layoutY="14.0" text="16" GridPane.columnIndex="16" />
-                                                <Label fx:id="oppDiss11" alignment="CENTER" layoutX="680.0" layoutY="43.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="11" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss12" alignment="CENTER" layoutX="680.0" layoutY="43.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="12" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss13" alignment="CENTER" layoutX="42.0" layoutY="18.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="13" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss14" alignment="CENTER" layoutX="42.0" layoutY="18.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="14" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss15" alignment="CENTER" layoutX="42.0" layoutY="18.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="15" GridPane.rowIndex="1" />
-                                                <Label fx:id="oppDiss16" alignment="CENTER" layoutX="42.0" layoutY="18.0" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="16" GridPane.rowIndex="1" />
+                                                <StackPane fx:id="oppImg02SP1" GridPane.columnIndex="1">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg021" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppImg04SP1" GridPane.columnIndex="3">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg041" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppImg05SP1" layoutX="80.0" layoutY="10.0" GridPane.columnIndex="4">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg051" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppImg06SP1" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="5">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg061" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppImg07SP1" layoutX="90.0" layoutY="20.0" GridPane.columnIndex="6">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg071" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppImg08SP1" layoutX="80.0" layoutY="10.0" GridPane.columnIndex="7">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg081" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppImg09SP1" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="8">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg091" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppImg10SP1" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="9">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg101" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppImg03SP1" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="2">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg031" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppDImg01SP1" layoutX="10.0" layoutY="10.0">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg011" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                      <ImageView fx:id="oppImg0112" fitHeight="88.0" fitWidth="73.0" layoutX="12.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppDImg10SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="9">
+                                                   <children>
+                                                      <ImageView fx:id="oppImg0111" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
                                              </children>
                                              <columnConstraints>
                                                 <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
@@ -144,181 +374,19 @@
                                                 <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                                              </columnConstraints>
                                              <rowConstraints>
-                                                <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="28.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="65.0" valignment="TOP" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="73.0" valignment="TOP" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                           </GridPane>
                                        </children>
                                     </AnchorPane>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                                       <children>
-                                          <GridPane fx:id="capHandGrid11" prefHeight="101.0" prefWidth="698.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <children>
-                                                <Label fx:id="disGameStage" alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="87.0">
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font></Label>
-                                                <Label text="A" GridPane.columnIndex="1" />
-                                                <Label text="2" GridPane.columnIndex="2" />
-                                                <Label text="3" GridPane.columnIndex="3" />
-                                                <Label text="4" GridPane.columnIndex="4" />
-                                                <Label text="5" GridPane.columnIndex="5" />
-                                                <Label text="6" GridPane.columnIndex="6" />
-                                                <Label text="7" GridPane.columnIndex="7" />
-                                                <Label text="8" GridPane.columnIndex="8" />
-                                                <Label text="9" GridPane.columnIndex="9" />
-                                                <Label text="10" GridPane.columnIndex="10" />
-                                                <Label layoutX="433.0" layoutY="14.0" text="J" GridPane.columnIndex="11" />
-                                                <Label layoutX="433.0" layoutY="14.0" text="Q" GridPane.columnIndex="12" />
-                                                <Label layoutX="433.0" layoutY="14.0" text="K" GridPane.columnIndex="13" />
-                                                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" text="Club" GridPane.rowIndex="1" />
-                                                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" text="Diamond" GridPane.rowIndex="2">
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" text="Heart" GridPane.rowIndex="3" />
-                                                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" text="Spade" GridPane.rowIndex="4" />
-                                                <Label fx:id="club01" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <Label fx:id="club02" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                <Label fx:id="club03" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                <Label fx:id="club04" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                <Label fx:id="club05" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                                <Label fx:id="club06" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                                                <Label fx:id="club07" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-                                                <Label fx:id="club08" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="8" GridPane.rowIndex="1" />
-                                                <Label fx:id="club09" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="9" GridPane.rowIndex="1" />
-                                                <Label fx:id="club10" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="10" GridPane.rowIndex="1" />
-                                                <Label fx:id="club11" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="11" GridPane.rowIndex="1" />
-                                                <Label fx:id="club12" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="12" GridPane.rowIndex="1" />
-                                                <Label fx:id="club13" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="13" GridPane.rowIndex="1" />
-                                                <Label fx:id="dmon01" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon02" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon03" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon04" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon05" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon06" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="6" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon07" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="7" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon08" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="8" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon09" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="9" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon10" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="10" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon11" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="11" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon12" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="12" GridPane.rowIndex="2" />
-                                                <Label fx:id="dmon13" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="13" GridPane.rowIndex="2" />
-                                                <Label fx:id="heart01" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart02" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart03" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart04" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart05" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart06" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart07" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="7" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart08" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="8" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart09" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="9" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart10" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="10" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart11" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="11" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart12" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="12" GridPane.rowIndex="3" />
-                                                <Label fx:id="heart13" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="13" GridPane.rowIndex="3" />
-                                                <Label fx:id="spade01" alignment="CENTER" contentDisplay="CENTER" layoutX="59.0" layoutY="69.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade02" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade03" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade04" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade05" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade06" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="6" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade07" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="7" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade08" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="8" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade09" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="9" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade10" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="10" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade11" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="11" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade12" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="12" GridPane.rowIndex="4" />
-                                                <Label fx:id="spade13" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="87.0" GridPane.columnIndex="13" GridPane.rowIndex="4" />
-                                             </children>
-                                             <columnConstraints>
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="28.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                          </GridPane>
-                                       </children></AnchorPane>
-                                </items>
-                              </SplitPane>
+                                </content>
+                              </ScrollPane>
                            </children></AnchorPane>
-                    </items>
-                  </SplitPane>
-               </children></AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-               <children>
-                  <VBox prefHeight="442.0" prefWidth="288.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="398.0" prefWidth="332.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                          <items>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                                 <children>
-                                    <TitledPane animated="false" prefHeight="160.0" prefWidth="330.0" text="Command Results" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                      <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                             <children>
-                                                <ListView fx:id="sphinxResultLstV" prefHeight="132.0" prefWidth="328.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                             </children>
-                                          </AnchorPane>
-                                      </content>
-                                    </TitledPane>
-                                 </children>
-                              </AnchorPane>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                                 <children>
-                                    <TitledPane animated="false" prefHeight="398.0" prefWidth="416.0" text="Logging" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                      <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                             <children>
-                                                <ListView fx:id="sphinxHypotLstV" layoutX="65.0" layoutY="-22.0" prefHeight="370.0" prefWidth="414.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                             </children>
-                                          </AnchorPane>
-                                      </content>
-                                    </TitledPane>
-                                 </children>
-                              </AnchorPane>
-                          </items>
-                        </SplitPane>
-                        <AnchorPane prefHeight="45.0" prefWidth="232.0">
-                           <children>
-                              <CheckBox fx:id="togVoice" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#togVoiceClick" prefHeight="44.0" prefWidth="93.0" text="Voice On" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="195.0" AnchorPane.topAnchor="0.0">
-                                 <padding>
-                                    <Insets bottom="5.0" left="5.0" />
-                                 </padding>
-                              </CheckBox>
-                           </children>
-                        </AnchorPane>
                      </children>
                   </VBox>
-               </children>
-            </AnchorPane>
+               </children></AnchorPane>
         </items>
       </SplitPane>
    </center>
@@ -335,7 +403,7 @@
                   <Insets left="5.0" top="5.0" />
                </HBox.margin>
             </Button>
-            <TextField fx:id="testFname" prefHeight="27.0" prefWidth="78.0" text="ginTest.txt">
+            <TextField fx:id="testFname" onAction="#issueTest" prefHeight="27.0" prefWidth="78.0" text="ginTest.txt">
                <HBox.margin>
                   <Insets left="5.0" top="5.0" />
                </HBox.margin>
@@ -386,4 +454,225 @@
          </children>
       </HBox>
    </bottom>
+   <top>
+      <AnchorPane prefHeight="300.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="400.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <GridPane>
+                     <children>
+                        <StackPane fx:id="capImg01SP" prefHeight="150.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fx:id="capImg01" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/deck01/dsc02058.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="capImg02SP" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1">
+                           <children>
+                              <ImageView fx:id="capImg02" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/deck01/dsc02058.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="capImg03SP" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="2">
+                           <children>
+                              <ImageView fx:id="capImg03" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/deck01/dsc02058.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="capImg04SP" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="3">
+                           <children>
+                              <ImageView fx:id="capImg04" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/deck01/dsc02058.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="capImg05SP" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="4">
+                           <children>
+                              <ImageView fx:id="capImg05" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/deck01/dsc02058.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="capImg06SP" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="5">
+                           <children>
+                              <ImageView fx:id="capImg06" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/deck01/dsc02058.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="capImg07SP" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="6">
+                           <children>
+                              <ImageView fx:id="capImg07" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/deck01/dsc02058.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="capImg08SP" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="7">
+                           <children>
+                              <ImageView fx:id="capImg08" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/deck01/dsc02058.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="capImg09SP" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="8">
+                           <children>
+                              <ImageView fx:id="capImg09" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/deck01/dsc02058.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <StackPane fx:id="capImg10SP" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="9">
+                           <children>
+                              <ImageView fx:id="capImg10" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/deck01/dsc02058.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                     </children>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="150.0" minHeight="150.0" prefHeight="150.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                  </GridPane>
+                  <HBox prefHeight="325.0" prefWidth="1000.0">
+                     <children>
+                        <SplitPane dividerPositions="0.7014028056112225" prefHeight="325.0" prefWidth="1000.0">
+                          <items>
+                            <AnchorPane>
+                                 <children>
+                                    <SplitPane dividerPositions="0.42939481268011526" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <items>
+                                          <VBox>
+                                             <children>
+                                              <AnchorPane>
+                                                   <children>
+                                                      <TitledPane animated="false" text="Logging" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <content>
+                                                          <AnchorPane>
+                                                               <children>
+                                                                  <ListView fx:id="sphinxHypotLstV" layoutX="65.0" layoutY="-22.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                        </content>
+                                                      </TitledPane>
+                                                   </children>
+                                                </AnchorPane>
+                                                <CheckBox fx:id="togVoice" alignment="CENTER" contentDisplay="CENTER" minHeight="35.0" mnemonicParsing="false" onAction="#togVoiceClick" prefHeight="35.0" prefWidth="107.0" text="Voice On">
+                                                   <padding>
+                                                      <Insets bottom="5.0" left="5.0" />
+                                                   </padding>
+                                                </CheckBox>
+                                             </children>
+                                          </VBox>
+                                        <AnchorPane minHeight="225.0">
+                                             <children>
+                                                <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                  <columnConstraints>
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="54.0" minWidth="5.0" prefWidth="5.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="53.0" minWidth="20.0" prefWidth="20.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="20.0" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+                                                  </columnConstraints>
+                                                  <rowConstraints>
+                                                    <RowConstraints maxHeight="29.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="63.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="79.0" minHeight="5.0" prefHeight="9.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="114.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="80.0" minHeight="10.0" prefHeight="79.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="73.0" minHeight="0.0" prefHeight="8.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints maxHeight="53.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                                    <RowConstraints maxHeight="27.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                  </rowConstraints>
+                                                   <children>
+                                                      <Label fx:id="oppTurn" alignment="CENTER" contentDisplay="CENTER" prefHeight="21.0" prefWidth="230.0" GridPane.columnIndex="3" GridPane.columnSpan="5" GridPane.rowIndex="6" />
+                                                      <Label fx:id="capTurn" alignment="CENTER" contentDisplay="CENTER" prefHeight="21.0" prefWidth="229.0" GridPane.columnIndex="3" GridPane.columnSpan="5" GridPane.rowIndex="1" />
+                                                      <StackPane fx:id="deckImgSP" prefHeight="54.0" prefWidth="40.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                                                         <children>
+                                                            <ImageView fx:id="deckImg" fitHeight="140.0" fitWidth="92.0" opacity="0.8" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@imgs/deck01/dsc02058.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <Label fx:id="disCardCnt" textFill="#02ee22">
+                                                               <font>
+                                                                  <Font name="Tahoma Bold" size="48.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                      </StackPane>
+                                                      <StackPane fx:id="pileImgSP" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="2">
+                                                         <children>
+                                                            <ImageView fx:id="pileImg" fitHeight="140.0" fitWidth="92.0" pickOnBounds="true" preserveRatio="true" />
+                                                         </children>
+                                                      </StackPane>
+                                                   </children>
+                                                </GridPane>
+                                             </children></AnchorPane>
+                                      </items>
+                                    </SplitPane>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane>
+                                 <children>
+                                    <TitledPane animated="false" text="Command Results" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <content>
+                                        <AnchorPane>
+                                             <children>
+                                                <ListView fx:id="sphinxResultLstV" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </TitledPane>
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </top>
 </BorderPane>
