@@ -19,6 +19,7 @@ public class VoiceCmds {
     public int capIdx;
     public int oppIdx;
     public int dissIdx;
+    public int deckCnt;
     public String lastCmd;
     public String sortSts;
 
@@ -36,6 +37,8 @@ public class VoiceCmds {
     private static final String[] CMDS = {"DEAL", "REMOVE", "ADD", "SORT", "SORTRANK", "PASS", "DECK", "PILE", "END", "SET", "FIX","FINISH"};
     private static final String[] SUIT = {"CLUB", "DIAMOND", "HEART", "SPADE"};
     private static final String[] RANK = {"ACE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "JACK", "QUEEN", "KING"};
+    // Not used yet so keep
+    private static final String[] STAGES = {"LOADING", "DEALING", "ADDREMOVE", "PASSING", "PLAYING", "ENDREQUEST","ENDING", "FINISHING","FINISHED"};
     static Logger log = Logger.getLogger(VoiceCmds.class.getName());
 
     public VoiceCmds() {
@@ -50,8 +53,9 @@ public class VoiceCmds {
 
         setHands(0, "", handOpp);
         setHands(0, "", dissOpp);
+        setHands(0, "", handCap);
         setGameStage("LOADING");
-        setSortSts("");
+        setSortSts("SORTRANK");
         setLastCmd("");
         setFirstPass(true);
         setPrevVoice("");
@@ -277,16 +281,12 @@ public class VoiceCmds {
     public void setHands(int idx, String str, LinkedList<String> lst) {
         lst.add(idx, str);
     }
-    public int getOppIdx() {
-        return oppIdx;
-    }
-    public int getCapIdx() {
-        return capIdx;
-    }
+    public int getOppIdx() {return oppIdx;}
+    public int getCapIdx() {return capIdx;}
     public int getDissIdx() {
         return dissIdx;
     }
-    public void setOppIdx(int capIdx) {
+    public void setOppIdx(int oppIdx) {
         this.oppIdx = oppIdx;
     }
     public void setCapIdx(int capIdx) {
@@ -306,8 +306,13 @@ public class VoiceCmds {
                     capLstCmds.removeFirst();
                 }
             }
-            this.whosTurn = !this.whosTurn;
         }
+        this.whosTurn = !this.whosTurn;
+    }
+    // the number of cards of Deck cards
+    public int getDeckCnt() {return deckCnt;}
+    public void setDeckCnt(int deckCnt) {
+        this.deckCnt = deckCnt;;
     }
     public boolean getTurn() { return whosTurn; }
     public void setFirstPass(boolean fstPass) {
@@ -361,17 +366,33 @@ public class VoiceCmds {
     public void fixCardStr(LinkedList<String> lst) {
         log.trace("FIX");
         dissOpp.set(0,"");
+        String card;
         if (lst.get(0).equals("PASS")) {
-            String[] spl = lst.get(1).split("\\s+");
-            String card = spl[0] + " " + spl[1];
-            setCardStatus(getStrIdx(card, deckStr), spl[2]);
-            if (spl[2].equals("OPP")) {
-                handOpp.add(card);
+
+            // Add condition to check for first passing stage
+            // when no pass card is required
+            if (lst.size()>1) {
+                String[] spl = lst.get(1).split("\\s+");
+                card = spl[0] + " " + spl[1];
+                setCardStatus(getStrIdx(card, deckStr), spl[2]);
+                if (spl[2].equals("OPP")) {
+                    handOpp.add(card);
+                }
+                int splSize = spl.length;
+                if (splSize==5) { // update the dissOpp00
+                    card = spl[3] + " " + spl[4];
+                    dissOpp.set(0, card);
+                }
+            } else {
+                card = dissOpp.get(1);
+                setCardStatus(getStrIdx(card, deckStr), "DECK");
+                dissOpp.remove(1);
+                setDissIdx(getDissIdx() - 1);
             }
-            int splSize = spl.length;
-            if (splSize==5) { // update the dissOpp00
-                card = spl[3] + " " + spl[4];
-                dissOpp.set(0, card);
+            // Allow for fix during the first Passing stage
+            if (getDeckCnt()==31) {
+                setGameStage("ADDREMOVE");
+                dissOpp.set(0,card);
             }
             setTurn();
         } else { // it's a DECK/PILE with a Pass card
@@ -396,33 +417,65 @@ public class VoiceCmds {
                     spl = lst.get(3).split("\\s+");
                     String card2 = spl[0] + " " + spl[1];
                     String sts2= spl[2];
-                    if (sts1.equals("OPPD")) { // update handcap
-                        handCap.remove(10);
-                        handCap.add(10, card2);
-                        setCardStatus(getStrIdx(card1, deckStr), "OPPD");
-                        setCardStatus(getStrIdx(card2, deckStr), "CAP");
-                    } else { // sts is CAPD
-                        if (sts2.equals("OPP")) { // card came from handOpp
-                            handOpp.removeFirst();
-                            handOpp.add(card2);
-                            setCardStatus(getStrIdx(card1, deckStr), "CAPD");
-                            setCardStatus(getStrIdx(card2, deckStr), "OPP");
+                    switch (sts1) {
+                        case "OPPD": // update handcap
+                            handCap.remove(10);
+                            handCap.add(10, card2);
+                            setCardStatus(getStrIdx(card1, deckStr), "OPPD");
+                            setCardStatus(getStrIdx(card2, deckStr), "CAP");
+                            break;
+                        case "CAPD": // sts is CAPD
+                            if (sts2.equals("OPP")) { // card came from handOpp
+                                handOpp.removeFirst();
+                                handOpp.add(card2);
+                                setCardStatus(getStrIdx(card1, deckStr), "CAPD");
+                                setCardStatus(getStrIdx(card2, deckStr), "OPP");
+                                dissOpp.set(0, card1);
+                                handOpp.set(0,"");
+                            } else { // pass card was a DECK card
+                                handOpp.removeFirst();
+                                setCardStatus(getStrIdx(card1, deckStr), "CAPD");
+                                setCardStatus(getStrIdx(card2, deckStr), "DECK");
+                                dissOpp.set(0, card1);
+                                handOpp.set(0,"");
+                            }
+                            break;
+                        // if sts1 is deck it's the first pile card
+                        // so it can be updated to DECK which was the previous status.
+                        // The exitsting status will reflect what player took the card
+                        // so CAP or OPP and can be removed from the hand.  The pass card
+                        // gets added back.  Add the pile card to dissOpp.set(0)
+                        case "DECK": // sts is CAPD
+                            setCardStatus(getStrIdx(card1, deckStr), "DECK");
                             dissOpp.set(0, card1);
-                            handOpp.set(0,"");
-                        } else { // pass card was a DECK card
-                            handOpp.removeFirst();
-                            setCardStatus(getStrIdx(card1, deckStr), "CAPD");
-                            setCardStatus(getStrIdx(card2, deckStr), "DECK");
-                            dissOpp.set(0, card1);
-                            handOpp.set(0,"");
-                        }
 
+                            if (sts2.equals("CAP")) { // CAP took the pile card
+                                handCap.remove(10);
+                                handCap.add(10, card2);
+                                setCardStatus(getStrIdx(card2, deckStr), "CAP");
+                            } else { // OPP took the pile card
+                                if (sts2.equals("OPP")) { // card came from handOpp
+                                    handOpp.removeFirst();
+                                    handOpp.add(card2);
+                                    setCardStatus(getStrIdx(card2, deckStr), "OPP");
+
+                                } else { // pass card was a DECK card
+                                    int idx = getStrIdx(card1, handOpp);
+                                    if (idx != -1) {
+                                        handOpp.remove(idx);
+                                        setOppIdx(getOppIdx() - 1);
+                                    }
+                                    setCardStatus(getStrIdx(card2, deckStr), "DECK");
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
             setTurn();
         }
-
     }
     public void processCmds(String cmd, String card) {
         //List<String> sorting;
@@ -430,23 +483,29 @@ public class VoiceCmds {
 
         switch (cmd) {
             case "DEAL":
-                if (getGameStage().equals("LOADING") || getGameStage().equals("DEALING") || getGameStage().equals("PASSING")) {
+                if (getGameStage().equals("LOADING") ||
+                        getGameStage().equals("DEALING") ||
+                     //   getGameStage().equals("FINISHED") ||
+                        getGameStage().equals("PASSING") ||
+                        getGameStage().equals("ADDREMOVE")) {
                     setLastCmd(cmd);
                     setGameStage("DEALING");
                     setCapIdx(0);
                     resetHands(handCap);
+                    resetHands(dissOpp);
                     resetCardStatus();
                     whosTurn = true;
                 }
                 break;
             case "REMOVE":
-                if (getGameStage().equals("PASSING") || getGameStage().equals("FINISHING" )) {
+                if (getGameStage().equals("ADDREMOVE") ||
+                        getGameStage().equals("FINISHING" )) {
 
                     if (card.equals("")) {
                         setLastCmd(cmd);
                     } else {
                         switch (getGameStage()) {
-                            case "PASSING":
+                            case "ADDREMOVE":
                                 if (getStrIdx(card, deckStr) != -1 && getStrIdx(card, handCap) != -1) {
                                     setCardStatus(getStrIdx(card, deckStr), "DECK");
                                     int idx = getStrIdx(card, handCap);
@@ -455,11 +514,11 @@ public class VoiceCmds {
                                 }
                                 break;
                             case "FINISHING":
-                                if (getStrIdx(card, deckStr) != -1 && getStrIdx(card, dissOpp) != -1) {
+                                if (getStrIdx(card, deckStr) != -1 && getStrIdx(card, handOpp) != -1) {
                                     setCardStatus(getStrIdx(card, deckStr), "DECK");
-                                    int idx = getStrIdx(card, dissOpp);
-                                    dissOpp.remove(idx);
-                                    setDissIdx(getDissIdx() - 1);
+                                    int idx = getStrIdx(card, handOpp);
+                                    handOpp.remove(idx);
+                                    setOppIdx(getOppIdx() - 1);
                                 }
                                 break;
                             default:
@@ -469,12 +528,13 @@ public class VoiceCmds {
                 }
                 break;
             case "ADD":
-                if (getGameStage().equals("PASSING") || getGameStage().equals("FINISHING")) {
+                if (getGameStage().equals("ADDREMOVE") ||
+                        getGameStage().equals("FINISHING")) {
                     if (card.equals("")) {
                         setLastCmd(cmd);
                     } else {
                         switch (getGameStage()) {
-                            case "PASSING":
+                            case "ADDREMOVE":
                                 if (getCapIdx() < 10) { // the cap hand is full can't add.
                                     // check if the card status is equal to DECK
                                     if (getCardStatus(getStrIdx(card, deckStr)).equals("DECK")) { // card is available to be added to cap hand
@@ -486,13 +546,12 @@ public class VoiceCmds {
                                 }
                                 break;
                             case "FINISHING":
-                                if (getDissIdx() < 10) { // the diss hand is full can't add.
+                                if (getOppIdx() < 10) { // the Opp hand is full can't add.
                                     // check if the card status is equal to END
                                     if (getCardStatus(getStrIdx(card,deckStr)).equals("END")) break;
-                                    // set the card status in the deck to in the computer aided players(CAP) hand
                                     setCardStatus(getStrIdx(card, deckStr), "END");
-                                    setDissIdx(getDissIdx() + 1);
-                                    setHands(getDissIdx(), card, dissOpp);
+                                    setOppIdx(getOppIdx() + 1);
+                                    setHands(getOppIdx(), card, handOpp);
                                 }
                                 break;
                             default:
@@ -501,33 +560,38 @@ public class VoiceCmds {
                     }
                 }
                 break;
-
             case "SORTRANK":
-                if (!getGameStage().equals("PASSING") && !getGameStage().equals("PLAYING")) break;
                 if (!handCap.get(0).equals("") || !handOpp.get(0).equals("")) break;
-
-                setSortSts(cmd);
-                sortHandCap();
+                if (getGameStage().equals("PASSING") ||
+                        getGameStage().equals("ADDREMOVE") ||
+                        getGameStage().equals("PLAYING")) {
+                    setSortSts(cmd);
+                    sortHandCap();
+                }
                 break;
-
             case "SORT":
-                if (!getGameStage().equals("PASSING") && !getGameStage().equals("PLAYING")) break;
-                if (!handCap.get(0).equals("") ||!handOpp.get(0).equals("")) break;
-
-                setSortSts(cmd);
-                sortHandCap();
+                if (!handCap.get(0).equals("") || !handOpp.get(0).equals("")) break;
+                if (getGameStage().equals("PASSING") ||
+                        getGameStage().equals("ADDREMOVE") ||
+                        getGameStage().equals("PLAYING")) {
+                    setSortSts(cmd);
+                    sortHandCap();
+                }
                 break;
             case "SET":
-                if (!getGameStage().equals("PASSING")) break;
-                // setTurn() used from the controller to toggle turns
-                // set command used to change default from CAP to OPP.
-                whosTurn = !whosTurn;
-                log.trace(cmd);
+                if (getGameStage().equals("PASSING") ||
+                        getGameStage().equals("ADDREMOVE") ||
+                        getGameStage().equals("DEALING")) {
+                    // setTurn() used from the controller to toggle turns
+                    // set command used to change default from CAP to OPP.
+                    whosTurn = !whosTurn;
+                    log.trace(cmd);
+                }
                 break;
             case "DECK":
                 if (!getGameStage().equals("PLAYING")) break;
-                // Humm needs to be fixed.
                 if (!whosTurn) break; // only a valid opp command.
+
                 if (card.equals("")) {
                     setLastCmd(cmd);
                     saveLstCmd(cmd);
@@ -538,56 +602,60 @@ public class VoiceCmds {
                     setCardStatus(getStrIdx(card, deckStr), "CAP");
                     handCap.set(0,card);
                 }
-
                 break;
             case "PILE":
+                if (getGameStage().equals("ADDREMOVE") &&
+                        getCapIdx() == 10) setGameStage("PASSING");
 
-                if (getGameStage().equals("PLAYING") || getGameStage().equals("PASSING")) {
+                if (getGameStage().equals("PLAYING") ||
+                        getGameStage().equals("PASSING")) {
                     if (card.equals("")) setLastCmd(cmd);
-                    if (card.equals("") && getGameStage().equals("PASSING")) {
-                        // setLastCmd(cmd);
-                    } else {
-                        if (whosTurn) { // CAP if true
-                            if (card.equals("") && !dissOpp.get(1).equals("")) card=dissOpp.get(1);
-                            if (getStrIdx(card, deckStr) == -1) break;
-                            if (getGameStage().equals("PASSING") && !getCardStatus(getStrIdx(card, deckStr)).equals("DECK")) break;
-                            if (getGameStage().equals("PLAYING") && !getCardStatus(getStrIdx(card, deckStr)).equals("OPPD")) break;
-                            setGameStage("PLAYING");
-                            saveLstCmd(cmd);
-                            saveLstCmd(card + " " + getCardStatus(getStrIdx(card, deckStr)));
-                            setCardStatus(getStrIdx(card, deckStr), "CAPP");
-                            handCap.set(0,card);
+                    // This line of code will handle the first pass sequence after the deal.
+                    if (getCardStatus(getStrIdx(dissOpp.get(0), deckStr)).equals("DECK")) card = dissOpp.get(0);
+                    if (whosTurn) { // CAP if true
+                        if (card.equals("") && !dissOpp.get(1).equals("")) card=dissOpp.get(1);
+                        if (getStrIdx(card, deckStr) == -1) break;
+                        if (getGameStage().equals("PLAYING") && !getCardStatus(getStrIdx(card, deckStr)).equals("OPPD")) break;
+                        setGameStage("PLAYING");
+                        saveLstCmd(cmd);
+                        saveLstCmd(card + " " + getCardStatus(getStrIdx(card, deckStr)));
+                        setCardStatus(getStrIdx(card, deckStr), "CAPP");
+                        handCap.set(0,card);
 
-                        } else { // OPP
-                            if (card.equals("") && !dissOpp.get(0).equals("")) card=dissOpp.get(0);
-                            if (getStrIdx(card, deckStr) == -1) break;
-                            if (getGameStage().equals("PASSING") && !getCardStatus(getStrIdx(card, deckStr)).equals("DECK")) break;
-                            if (getGameStage().equals("PLAYING") && !getCardStatus(getStrIdx(card, deckStr)).equals("CAPD")) break;
-                            setGameStage("PLAYING");
-                            saveLstCmd(cmd);
-                            saveLstCmd(card + " " + getCardStatus(getStrIdx(card, deckStr)));
-                            setCardStatus(getStrIdx(card, deckStr), "OPPP");
-                            handOpp.set(0,card);
-                            dissOpp.set(0, "");
-                        }
+                    } else { // OPP
+                        if (card.equals("") && !dissOpp.get(0).equals("")) card=dissOpp.get(0);
+                        if (getStrIdx(card, deckStr) == -1) break;
+                        if (getGameStage().equals("PLAYING") && !getCardStatus(getStrIdx(card, deckStr)).equals("CAPD")) break;
+                        setGameStage("PLAYING");
+                        saveLstCmd(cmd);
+                        saveLstCmd(card + " " + getCardStatus(getStrIdx(card, deckStr)));
+                        setCardStatus(getStrIdx(card, deckStr), "OPPP");
+                        handOpp.set(0,card);
+                        dissOpp.set(0, "");
                     }
                 }
-
                 break;
             case "PASS":
-                if (getGameStage().equals("PASSING") || getGameStage().equals("PLAYING")) {
+                if (getGameStage().equals("ADDREMOVE") &&
+                        getCapIdx() == 10) setGameStage("PASSING");
+                // During PASSING stage we have the card so set it.
+                if (getGameStage().equals("PASSING")) {
+                    saveLstCmd(cmd);
+                    log.trace(cmd);
+                    card = dissOpp.get(0);
+                }
+                if (getGameStage().equals("PASSING") ||
+                        getGameStage().equals("PLAYING")) {
+
                     if (card.equals("")) {
-                        if (getGameStage().equals("PASSING")) {
-                            setGameStage("PLAYING");
-                            log.trace(cmd);
-                            setTurn();
-                            break;
-                        }
                         setLastCmd(cmd);
                         saveLstCmd(cmd);
                     } else {
-
-                        if (!getGameStage().equals("PLAYING")) setGameStage("PLAYING");
+                        msgQueue.add("card " +card);
+                        msgQueue.add("dissOpp "+ dissOpp.get(0) +" deck sts "+getCardStatus(getStrIdx(dissOpp.get(0), deckStr)));
+                        // This line of code will handle the first pass sequence after the deal.
+                      //  if (getCardStatus(getStrIdx(dissOpp.get(0), deckStr)).equals("DECK")) card = dissOpp.get(0);
+                     //   if (!getGameStage().equals("PLAYING")) setGameStage("PLAYING");
                         if (whosTurn) { // CAP if true
                             if (handCap.get(0).equals("")) {
                                 if (getStrIdx(card, deckStr) != -1 && getCardStatus(getStrIdx(card, deckStr)).equals("DECK")) {
@@ -595,6 +663,14 @@ public class VoiceCmds {
                                     setCardStatus(getStrIdx(card, deckStr), "CAPD");
                                     dissOpp.set(0, card);
                                     setTurn();
+                                } else { // handle the pass stage of game
+                                    if (getGameStage().equals("PASSING")) {
+                                        String prevSts = getCardStatus(getStrIdx(card, deckStr));
+                                        // set the status to CAPD so it can not be passed again
+                                        setCardStatus(getStrIdx(card, deckStr), "OPPD");
+                                        setGameStage("PLAYING");
+                                        setTurn();
+                                    }
                                 }
                             } else {
                                 if (getStrIdx(card, deckStr) != -1 && getCardStatus(getStrIdx(card, deckStr)).equals("CAP")) {
@@ -623,7 +699,6 @@ public class VoiceCmds {
                                 }
                                 dissOpp.set(1,card);
 
-
                                 if (!handOpp.get(0).equals("")) {
                                     if (getCardStatus(getStrIdx(card, deckStr)).equals("DECK")) {
                                         setCardStatus(getStrIdx(handOpp.get(0), deckStr), "OPP");
@@ -637,32 +712,45 @@ public class VoiceCmds {
                                         setCardStatus(getStrIdx(handOpp.get(0), deckStr), "OPP");
                                         handOpp.set(0,"");
                                     }
-
                                 } else {
                                     int idx = getStrIdx(card, handOpp);
                                     if (idx != -1) {
                                         handOpp.remove(idx);
                                         setOppIdx(getOppIdx() - 1);
                                     }
-
                                 }
                                 setCardStatus(getStrIdx(card, deckStr), "OPPD");
                                 saveLstCmd(card + " " + prevSts + " " + dissOpp.get(0));
-                                dissOpp.set(0, "");
+                                if (!getGameStage().equals("PASSING")) dissOpp.set(0, "");
 
                                 setTurn();
+                            } else { // handle the pass stage of game
+                                if (getGameStage().equals("PASSING")) {
+                                    String prevSts = getCardStatus(getStrIdx(card, deckStr));
+                                    // set the status to CAPD so it can not be passed again
+                                    setCardStatus(getStrIdx(card, deckStr), "CAPD");
+                                    setDissIdx(getDissIdx() + 1);
+                                    setHands(getDissIdx(), dissOpp.get(getDissIdx()-1), dissOpp);
+                                    for (int i = getDissIdx()-1; i>1; i--) {
+                                        dissOpp.set(i,dissOpp.get(i-1));
+                                    }
+                                    dissOpp.set(1,card);
+                                    setGameStage("PLAYING");
+                                    setTurn();
+                                }
                             }
                         }
                     }
                 }
-
                 break;
             case "FIX":
-                if (getGameStage().equals("PLAYING") || getGameStage().equals("ENDREQUEST")) {
-                if (getGameStage().equals("ENDREQUEST"))  {
-                    setGameStage("PLAYING");
-                    break;
-                }
+                if (getGameStage().equals("PLAYING") ||
+                        getGameStage().equals("PASSING") ||
+                        getGameStage().equals("ENDREQUEST")) {
+                    if (getGameStage().equals("ENDREQUEST"))  {
+                        setGameStage("PLAYING");
+                        break;
+                    }
                     if (whosTurn) { // it's CAP's turn so reverse OPP
                         if (!capLstCmds.isEmpty()) {
                             if (capLstCmds.get(0).equals("DECK")) { // OPP never had deck
@@ -680,16 +768,27 @@ public class VoiceCmds {
                                         setCardStatus(getStrIdx(cardLst, deckStr), spl[2]);
                                         handCap.set(0,"");
                                         log.trace("FIX");
+                                        msgQueue.add("deckcnt "+String.valueOf(getDeckCnt()));
+                                        // Allow for fix during the first Passing stage
+                                        if (getDeckCnt()==31) setGameStage("ADDREMOVE");
                                         break;
                                     }
                                 }
                             }
-
                         }
                         if (!oppLstCmds.isEmpty()) {
                             dissOpp.remove(1);
                             setDissIdx(getDissIdx() - 1);
-                            fixCardStr(oppLstCmds);
+                            // Add condition to check for first passing stage
+                            // when no pass card is required
+                            if (oppLstCmds.size()>1) {
+                                fixCardStr(oppLstCmds);
+                            } else {
+                                setCardStatus(getStrIdx(dissOpp.get(0), deckStr), "DECK");
+                            }
+
+                            // Allow for fix during the first Passing stage
+                            if (getDeckCnt()==31) setGameStage("ADDREMOVE");
                         }
                     } else { // it's OPP's turn so reverse CAP
                         if (!oppLstCmds.isEmpty()) {
@@ -701,56 +800,55 @@ public class VoiceCmds {
                                     handOpp.set(0,"");
                                     dissOpp.set(0,cardLst);
                                     log.trace("FIX");
+                                    msgQueue.add("deckcnt "+String.valueOf(getDeckCnt()));
+                                    // Allow for fix during the first Passing stage
+                                    if (getDeckCnt()==31) setGameStage("ADDREMOVE");
                                     break;
                                 }
                             }
-
                         }
-
                         if (!capLstCmds.isEmpty()) fixCardStr(capLstCmds);
                     }
                 }
                 break;
             case "END":
-                if (getGameStage().equals("PLAYING") || getGameStage().equals("ENDREQUEST")) {
+                if (getGameStage().equals("PLAYING") ||
+                        getGameStage().equals("ENDREQUEST")) {
                     setLastCmd(cmd);
                     if (getGameStage().equals("ENDREQUEST")) {
                         setGameStage("ENDING");
-                        log.trace("ENDING");
-                        log.trace("dissOpp");
-                        for (String s : dissOpp) {
-                            log.trace(s);
-                        }
-                        log.trace("handOpp");
-                        for (String s : handOpp) {
-                            log.trace(s);
-                        }
-                        log.trace("handCap");
-                        for (String s : handCap) {
-                            log.trace(s);
-                        }
-                        log.trace("deckSts");
-                        for (String s : deckStr) {
-                            log.trace(s + " " + getCardStatus(getStrIdx(s, deckStr)));
-                        }
-
-                        while (!dissOpp.isEmpty()) {
-                            dissOpp.removeFirst();
-                        }
-                        setDissIdx(0);
-                        setHands(0, "", dissOpp);
+                        resetHands(handOpp);
+                        setOppIdx(0);
                         break;
                     }
                     if (getGameStage().equals("PLAYING")) setGameStage("ENDREQUEST");
                 }
                 break;
             case "FINISH":
+                if (getGameStage().equals("FINISHED")) break;
                 if (getGameStage().equals("FINISHING")) setGameStage("FINISHED");
+                log.trace("DUMP");
+                log.trace("dissOpp");
+                for (String s : dissOpp) {
+                    log.trace(s);
+                }
+                log.trace("handOpp");
+                for (String s : handOpp) {
+                    log.trace(s);
+                }
+                log.trace("handCap");
+                for (String s : handCap) {
+                    log.trace(s);
+                }
+                log.trace("deckSts");
+                for (String s : deckStr) {
+                    log.trace(s + " " + getCardStatus(getStrIdx(s, deckStr)));
+                }
+                setLastCmd(cmd);
                 break;
             default:
                 break;
         }
-
     }
     /*
     The method is used to ensure the format the command to be processes by the Fix
@@ -810,7 +908,6 @@ public class VoiceCmds {
                     lnkResultWithIdx.add(s);
                     log.trace(s);
                 }
-
             } else { // it's a card
                 // DEALING and ending must accept multiple cards.
                 if (getGameStage().equals("DEALING") || getGameStage().equals("ENDING")) {
@@ -819,28 +916,36 @@ public class VoiceCmds {
                             if (getCapIdx() < 10) { // the deal is !done.
                                 // check if the card status is equal to DECK
                                 if (getCardStatus(getStrIdx(s,deckStr)).equals("DECK")) { // card is available to be added to cap hand
-                                    // set the card status in the deck to in the computer aided players(CAP) hand
-                                    setCardStatus(getStrIdx(s,deckStr), "CAP");
-                                    setCapIdx(getCapIdx() + 1);
-                                    setHands(getCapIdx(), s, handCap);
+
+                                    if (getCapIdx()==0 && dissOpp.get(0).equals("")) {
+                                        dissOpp.set(0, s);
+                                    } else {
+                                        // needed because dissOpp card is decksts "DECK" unit PASSING stage complete
+                                        if (!s.equals(dissOpp.get(0))) {
+                                            setCapIdx(getCapIdx() + 1);
+                                            setCardStatus(getStrIdx(s,deckStr), "CAP");
+                                            setHands(getCapIdx(), s, handCap);
+                                        }
+                                    }
                                     lnkResultWithIdx.add(s);
                                     log.trace(s);
                                     if (getCapIdx()==10) {
                                         setLastCmd("");
-                                        setGameStage("PASSING");
+                                        setGameStage("ADDREMOVE");
+                                        processCmds(getSortSts(), "");
                                     }
                                 }
                             }
                             break;
                         case "ENDING":
-                            if (getDissIdx() < 10) { // the end meld is !done.
+                            if (getOppIdx() < 10) { // the end meld is !done.
                                 if (getCardStatus(getStrIdx(s,deckStr)).equals("END")) break;
                                 setCardStatus(getStrIdx(s,deckStr), "END");
-                                setDissIdx(getDissIdx() + 1);
-                                setHands(getDissIdx(), s, dissOpp);
+                                setOppIdx(getOppIdx() + 1);
+                                setHands(getOppIdx(), s, handOpp);
                                 lnkResultWithIdx.add(s);
                                 log.trace(s);
-                                if (getDissIdx()==10) {
+                                if (getOppIdx()==10) {
                                     setLastCmd("");
                                     setGameStage("FINISHING");
                                 }
@@ -849,9 +954,9 @@ public class VoiceCmds {
                         default:
                             break;
                     }
-
                 } else { // not in the dealing stage
-                    if (!getGameStage().equals("LOADING") && !getLastCmd().equals("")) {
+                    if (!getGameStage().equals("LOADING") &&
+                            !getLastCmd().equals("")) {
                         if (handCap.get(0).equals("") && handOpp.get(0).equals("")) {
                             processCmds(getLastCmd(), s);
                             lnkResultWithIdx.add(s);
@@ -864,13 +969,13 @@ public class VoiceCmds {
                                 log.trace(s);
                                 setLastCmd("");
                             }
-
                         }
-
                     }
                 }
             }
         }
+
+        msgQueue.add("result.."+ lnkResult.get(lnkResult.size()-1).toString());
         return lnkResultWithIdx;
     }
     public LinkedList<String> validVoiceResults(List<String> resultList) {
@@ -917,13 +1022,11 @@ public class VoiceCmds {
                             lnklistCard.add(getCardValue() + s);
                             setCardValue("");
                         }
-
                     }
                 }
 
             }
         }
-
         return lnklistCard;
     }
 }

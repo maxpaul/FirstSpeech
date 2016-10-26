@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@gin.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GinController">
+<BorderPane prefHeight="800.0" prefWidth="1000.0" stylesheets="@gin.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GinController">
    <center>
       <SplitPane dividerPositions="0.2995991983967936" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
@@ -138,6 +149,9 @@
                                        </children>
                                     </StackPane>
                                  </children>
+                                 <padding>
+                                    <Insets right="5.0" />
+                                 </padding>
                               </GridPane>
                            </children>
                         </AnchorPane>
@@ -247,115 +261,167 @@
                                     <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                                  </rowConstraints>
+                                 <padding>
+                                    <Insets right="5.0" />
+                                 </padding>
                               </GridPane>
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="129.0" prefWidth="695.0">
                            <children>
                               <ScrollPane prefHeight="109.0" prefWidth="695.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <content>
                                   <AnchorPane>
                                        <children>
-                                          <GridPane fx:id="capHandGrid1" prefHeight="60.0" prefWidth="702.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <GridPane fx:id="capHandGrid1" prefHeight="60.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-258.0" AnchorPane.topAnchor="0.0">
                                              <children>
-                                                <StackPane fx:id="oppImg02SP1" GridPane.columnIndex="1">
+                                                <StackPane fx:id="oppDImg02SP" GridPane.columnIndex="1">
                                                    <children>
-                                                      <ImageView fx:id="oppImg021" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg02" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
                                                 </StackPane>
-                                                <StackPane fx:id="oppImg04SP1" GridPane.columnIndex="3">
+                                                <StackPane fx:id="oppDImg04SP" GridPane.columnIndex="3">
                                                    <children>
-                                                      <ImageView fx:id="oppImg041" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg04" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
                                                 </StackPane>
-                                                <StackPane fx:id="oppImg05SP1" layoutX="80.0" layoutY="10.0" GridPane.columnIndex="4">
+                                                <StackPane fx:id="oppDImg05SP" layoutX="80.0" layoutY="10.0" GridPane.columnIndex="4">
                                                    <children>
-                                                      <ImageView fx:id="oppImg051" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg05" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
                                                 </StackPane>
-                                                <StackPane fx:id="oppImg06SP1" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="5">
+                                                <StackPane fx:id="oppDImg06SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="5">
                                                    <children>
-                                                      <ImageView fx:id="oppImg061" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg06" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
                                                 </StackPane>
-                                                <StackPane fx:id="oppImg07SP1" layoutX="90.0" layoutY="20.0" GridPane.columnIndex="6">
+                                                <StackPane fx:id="oppDImg13SP" layoutX="90.0" layoutY="20.0" GridPane.columnIndex="12">
                                                    <children>
-                                                      <ImageView fx:id="oppImg071" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg13" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
                                                 </StackPane>
-                                                <StackPane fx:id="oppImg08SP1" layoutX="80.0" layoutY="10.0" GridPane.columnIndex="7">
+                                                <StackPane fx:id="oppDImg14SP" layoutX="80.0" layoutY="10.0" GridPane.columnIndex="13">
                                                    <children>
-                                                      <ImageView fx:id="oppImg081" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg14" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
                                                 </StackPane>
-                                                <StackPane fx:id="oppImg09SP1" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="8">
+                                                <StackPane fx:id="oppDImg16SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="15">
                                                    <children>
-                                                      <ImageView fx:id="oppImg091" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg16" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
                                                 </StackPane>
-                                                <StackPane fx:id="oppImg10SP1" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="9">
+                                                <StackPane fx:id="oppDImg15SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="14">
                                                    <children>
-                                                      <ImageView fx:id="oppImg101" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg15" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
                                                 </StackPane>
-                                                <StackPane fx:id="oppImg03SP1" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="2">
+                                                <StackPane fx:id="oppDImg03SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="2">
                                                    <children>
-                                                      <ImageView fx:id="oppImg031" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg03" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
                                                 </StackPane>
-                                                <StackPane fx:id="oppDImg01SP1" layoutX="10.0" layoutY="10.0">
+                                                <StackPane fx:id="oppDImg01SP" layoutX="10.0" layoutY="10.0">
                                                    <children>
-                                                      <ImageView fx:id="oppImg011" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
-                                                         <image>
-                                                            <Image url="@imgs/deck01/dsc02058.png" />
-                                                         </image>
-                                                      </ImageView>
-                                                      <ImageView fx:id="oppImg0112" fitHeight="88.0" fitWidth="73.0" layoutX="12.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg01" fitHeight="88.0" fitWidth="73.0" layoutX="12.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
                                                       </ImageView>
                                                    </children>
                                                 </StackPane>
-                                                <StackPane fx:id="oppDImg10SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="9">
+                                                <StackPane fx:id="oppDImg17SP" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="16">
                                                    <children>
-                                                      <ImageView fx:id="oppImg0111" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fx:id="oppDImg17" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppDImg07SP" layoutX="882.0" layoutY="10.0" GridPane.columnIndex="6">
+                                                   <children>
+                                                      <ImageView fx:id="oppDImg07" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppDImg08SP" layoutX="341.0" layoutY="10.0" GridPane.columnIndex="7">
+                                                   <children>
+                                                      <ImageView fx:id="oppDImg08" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppDImg09SP" layoutX="5.0" layoutY="10.0" GridPane.columnIndex="8">
+                                                   <children>
+                                                      <ImageView fx:id="oppDImg09" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppDImg11SP" layoutX="5.0" layoutY="10.0" GridPane.columnIndex="10">
+                                                   <children>
+                                                      <ImageView fx:id="oppDImg11" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppDImg12SP" layoutX="5.0" layoutY="10.0" GridPane.columnIndex="11">
+                                                   <children>
+                                                      <ImageView fx:id="oppDImg12" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@imgs/deck01/dsc02058.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane fx:id="oppDImg10SP" layoutX="5.0" layoutY="10.0" GridPane.columnIndex="9">
+                                                   <children>
+                                                      <ImageView fx:id="oppDImg10" fitHeight="88.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@imgs/deck01/dsc02058.png" />
                                                          </image>
@@ -374,10 +440,20 @@
                                                 <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                                                 <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
                                              </columnConstraints>
                                              <rowConstraints>
                                                 <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="73.0" valignment="TOP" vgrow="SOMETIMES" />
                                              </rowConstraints>
+                                             <padding>
+                                                <Insets right="5.0" />
+                                             </padding>
                                           </GridPane>
                                        </children>
                                     </AnchorPane>
@@ -411,6 +487,11 @@
                   <Font size="10.0" />
                </font>
             </TextField>
+            <Button mnemonicParsing="false" onAction="#stepTest" text="Step Test">
+               <HBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </HBox.margin>
+            </Button>
             <ChoiceBox fx:id="cmdType1" prefHeight="27.0" prefWidth="70.0" stylesheets="@gin.css">
                <HBox.margin>
                   <Insets left="5.0" top="5.0" />

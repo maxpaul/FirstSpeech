@@ -36,13 +36,6 @@ public class GinController implements Initializable {
     private ListView<String> sphinxHypotLstV;
     @FXML
     private ListView<String> sphinxResultLstV;
-    //@FXML
-    //private Label cap00, cap01, cap02, cap03, cap04, cap05, cap06, cap07, cap08, cap09, cap10;
-    //@FXML
-    //private Label opp00, opp01, opp02, opp03, opp04, opp05, opp06, opp07, opp08, opp09, opp10;
-    @FXML
-    private Label oppDiss00, oppDiss01, oppDiss02, oppDiss03, oppDiss04, oppDiss05, oppDiss06, oppDiss07, oppDiss08, oppDiss09, oppDiss10, oppDiss11, oppDiss12, oppDiss13, oppDiss14, oppDiss15, oppDiss16;
-
     @FXML
     private Label club00, club01, club02, club03, club04, club05, club06, club07, club08, club09, club10, club11, club12, club13;
     @FXML
@@ -71,17 +64,22 @@ public class GinController implements Initializable {
     @FXML
     private StackPane oppImg00SP, oppImg01SP, oppImg02SP, oppImg03SP, oppImg04SP, oppImg05SP, oppImg06SP, oppImg07SP, oppImg08SP, oppImg09SP, oppImg10SP;
     @FXML
+    private ImageView oppDImg00, oppDImg01, oppDImg02, oppDImg03, oppDImg04, oppDImg05, oppDImg06, oppDImg07, oppDImg08, oppDImg09, oppDImg10, oppDImg11, oppDImg12, oppDImg13, oppDImg14, oppDImg15, oppDImg16;
+    @FXML
+    private StackPane oppDImg00SP, oppDImg01SP, oppDImg02SP, oppDImg03SP, oppDImg04SP, oppDImg05SP, oppDImg06SP, oppDImg07SP, oppDImg08SP, oppDImg09SP, oppDImg10SP, oppDImg11SP, oppDImg12SP, oppDImg13SP, oppDImg14SP, oppDImg15SP, oppDImg16SP;
+
+    @FXML
     private ImageView pileImg, deckImg;
     @FXML
     private StackPane pileImgSP, deckImgSP;
 
-  //  private List<Label> capLable =new ArrayList<>();
+
     private List<ImageView> capImageV =new ArrayList<>();
     private List<StackPane> capImageVSP =new ArrayList<>();
     private List<ImageView> oppImageV =new ArrayList<>();
     private List<StackPane> oppImageVSP =new ArrayList<>();
-   // private List<Label> oppLable =new ArrayList<>();
-    private List<Label> dissLable = new ArrayList<>();
+    private List<ImageView> oppImageVD =new ArrayList<>();
+    private List<StackPane> oppImageVDSP =new ArrayList<>();
 
     private List<Label> clubLable =new ArrayList<>();
     private List<Label> dmonLable =new ArrayList<>();
@@ -105,6 +103,9 @@ public class GinController implements Initializable {
     ObservableList<String> sphinxHypotItems = FXCollections.observableArrayList();
     ObservableList<String> sphinxResultItems = FXCollections.observableArrayList();
 
+    List<String> ginStepTest;
+    boolean fstStep = true;
+    int stepTestIdx = 0;
     boolean endless;
     VoiceCmds cmd = new VoiceCmds();
     private static GinCardImg cardImg = new GinCardImg();
@@ -144,19 +145,28 @@ public class GinController implements Initializable {
 
                     while ((result2 = recognizer2.getResult()) != null) {
 
-                        List<String> resultList = new ArrayList<>();
+                      //  List<String> resultList = new ArrayList<>();
                         if (togVoice.isSelected()) {
 
-                            resultList.add(result2.getHypothesis());
+                           // resultList.add(result2.getHypothesis());
                             displayHyptoLstV("sphinx Hypothesis ...");
                             displayHyptoLstV(result2.getHypothesis().toString());
                             //  Display Recognized words/times);
                             for (WordResult r : result2.getWords()) {
                                 displayHyptoLstV(r.toString());
                             }
+                            processResult(result2.getHypothesis());
+                            //resultList = cmd.splitResult(result2.getHypothesis());
 
-                            resultList = cmd.splitResult(result2.getHypothesis());
-                            updBorderPane(resultList);
+                            //List<String> resultList = cmd.splitResult(s);
+                            // check if the finished
+                         /*   boolean fin = false;
+                            for (String s : resultList) {
+                                displayResultLstV(s);
+                                if (s.equals("FINISH")) fin=true;
+                            }
+                            if (fin) reload();
+                            if (!fin) updBorderPane();*/
                         }
                         break;
                     }
@@ -172,13 +182,14 @@ public class GinController implements Initializable {
         th.setDaemon(true);
         th.start();
 
-        loadDissOpp();
-      //  loadCap();
+        // load the image display lists
         loadCapImgV();
         loadCapImgVSP();
         loadOppImgV();
         loadOppImgVSP();
-      //  loadOpp();
+        loadOppImgVD();
+        loadOppImgVDSP();
+        // load deck display titles
         loadClubs();
         loadDmon();
         loadHeart();
@@ -192,7 +203,30 @@ public class GinController implements Initializable {
         cmdSuit2.setItems(cmdSuitLst);
 
     }
-    private void updBorderPane(List<String> resultList) {
+    private void processResult(String str) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                List<String> resultList = new ArrayList<>();
+                resultList = cmd.splitResult(str);
+                // check if the finished
+                boolean fin = false;
+                for (String s : resultList) {
+                    displayResultLstV(s);
+                    if (s.equals("FINISH")) fin=true;
+                }
+                if (fin) reload();
+                if (!fin) updBorderPane();
+            }
+        });
+    }
+    private void reload() {
+        cmd = new VoiceCmds();
+        fstStep = true;
+        pileImg.setImage(null);
+        updBorderPane();
+    }
+    private void updBorderPane() {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -206,29 +240,18 @@ public class GinController implements Initializable {
                 setHandCap(handCap);
                 setHandOpp(handOpp);
                 setHandDissOpp(dissOpp);
-                for (String s : resultList) {
-                    displayResultLstV(s);
-                    if (gameStage.equals("DEALING") || gameStage.equals("PASSING") || gameStage.equals("ENDING")) {
-                      //  displayHands(s, capLable, handCapLst);
-                    }
-                }
-                if (gameStage.equals("PLAYING") || gameStage.equals("ENDING") || gameStage.equals("FINISHING") || gameStage.equals("LOADING")) {
-                  //  updHandDsp(capLable, handCapLst);
-                    updHandDsp(dissLable, handDissOppLst);
-                  //  updHandDsp(oppLable, handOppLst);
-                }
+
+                updHandImg(oppImageV, handOppLst, oppImageVSP, false);
+                updHandImg(oppImageVD, handDissOppLst, oppImageVDSP, false);
+
                 // display any info message added to queue
                 dspMsgQueue(cmd.getMsgQueue());
 
                 updHandImg(capImageV, handCapLst, capImageVSP, true );
-                updHandImg(oppImageV, handOppLst, oppImageVSP, false);
-
                 updDeckPileImg();
-
                 updTurnVar(cmd.getTurn(), cmd.getGameStage());
 
                 updDeckDsp(cardStatus);
-                if (gameStage.equals("FINISHED")) setEndless(false);
             }
         });
     }
@@ -340,6 +363,7 @@ public class GinController implements Initializable {
                     if (cardStatus.get(i).equals("OPP")) cntOpp++;
                 }
                 disCardCnt.setText(Integer.toString(cntDeck-10+cntOpp));
+                cmd.setDeckCnt(cntDeck-10+cntOpp);
             }
         });
     }
@@ -359,16 +383,25 @@ public class GinController implements Initializable {
             public void run() {
                 Image img;
                 pileImgSP.setStyle("-fx-border-color: transparent;");
-                if (!handCapLst.get(0).equals("") || !handOppLst.get(0).equals("")) {
-                    pileImgSP.setStyle("-fx-border-color: darkblue;");
-                }
+
+                if (!handCapLst.get(0).equals("") &&
+                        cmd.getCardStatus(cmd.getStrIdx(handCapLst.get(0), cmd.deckStr)).equals("CAPP"))
+                        pileImgSP.setStyle("-fx-border-color: darkblue;");
+                if (!handOppLst.get(0).equals("") &&
+                        cmd.getCardStatus(cmd.getStrIdx(handOppLst.get(0), cmd.deckStr)).equals("OPPP"))
+                        pileImgSP.setStyle("-fx-border-color: darkblue;");
 
                 if (!handDissOppLst.get(0).equals("")) {
                     int cardIdx = cmd.getStrIdx(handDissOppLst.get(0), cmd.deckStr);
                     img = cardImg.getImage(cardIdx);
                     pileImg.setImage(img);
+                } else {
+                    if (cmd.getGameStage().equals("DEALING")) pileImg.setImage(null);
                 }
-                if (handDissOppLst.get(0).equals("") && handCapLst.get(0).equals("") && handOppLst.get(0).equals("")) {
+                if (handDissOppLst.get(0).equals("") &&
+                        handCapLst.get(0).equals("") &&
+                        handOppLst.get(0).equals("") &&
+                        handDissOppLst.size()>1) {
                     int cardIdx = cmd.getStrIdx(handDissOppLst.get(1), cmd.deckStr);
                     img = cardImg.getImage(cardIdx);
                     pileImg.setImage(img);
@@ -383,8 +416,8 @@ public class GinController implements Initializable {
             public void run() {
                 Image img;
 
-                for (int i=1; i<11; i++){
-                         img = cardImg.getImage(0); // the back of card
+                for (int i=1; i<spLst.size(); i++){
+                    img = cardImg.getImage(0); // the back of card
                     spLst.get(i).setStyle("-fx-border-color: transparent;");
                     if (i<=lst.size()-1) {
                         if (!lst.get(i).equals("")) {
@@ -482,13 +515,12 @@ public class GinController implements Initializable {
                 if(cmdType2.getValue()!=null) sb.append(cmdType2.getValue()).append(" ");
                 if(cmdRank2.getValue()!=null) sb.append(cmdRank2.getValue()).append(" ");
                 if(cmdSuit2.getValue()!=null) sb.append(cmdSuit2.getValue()).append(" ");
-                // add a sort command based on the current sort preference
-              //  sb.append(cmd.getSortSts());
 
                 displayHyptoLstV("Submit command ...\n"+sb);
                 List<String> resultList = cmd.splitResult(sb.toString());
+                for (String s : resultList) displayResultLstV(s);
 
-                updBorderPane(resultList);
+                updBorderPane();
 
                 cmdType1.setValue(null);
                 cmdRank1.setValue(null);
@@ -499,7 +531,6 @@ public class GinController implements Initializable {
             }
         });
     }
-
     public void togVoiceClick(ActionEvent event) {
         Platform.runLater(new Runnable() {
             @Override
@@ -515,7 +546,7 @@ public class GinController implements Initializable {
                 Stream<String> stream = null;
                 try {
                     String fname = testFname.getText();
-                    displayHyptoLstV(fname);
+                    displayHyptoLstV("Test file .. "+fname);
                     if (!fname.equals("")) stream = Files.lines(Paths.get(fname));
                    // if (fname.equals("")) stream = Files.lines(Paths.get("ginTest.txt"));
 
@@ -525,9 +556,10 @@ public class GinController implements Initializable {
                 List<String> ginTest = stream != null ? stream.collect(Collectors.toList()) : null;
 
                 for (String s : ginTest) {
-                    displayResultLstV(s);
-                    List<String> resultList = cmd.splitResult(s);
-                    updBorderPane(resultList);
+                    processResult(s);
+                  //  List<String> resultList = cmd.splitResult(s);
+                  //  for (String ss : resultList) displayResultLstV(ss);
+                   // updBorderPane();
                 }
 
             }
@@ -544,58 +576,45 @@ public class GinController implements Initializable {
             }
         });
     }
+    public void stepTest(ActionEvent event) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if(fstStep) {
+                    fstStep = false;
+
+                    stepTestIdx = 0;
+                    Stream<String> stream = null;
+                    try {
+                        String fname = testFname.getText();
+                        displayHyptoLstV("Step Test file .. "+fname);
+                        if (!fname.equals("")) stream = Files.lines(Paths.get(fname));
+                        // if (fname.equals("")) stream = Files.lines(Paths.get("ginTest.txt"));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ginStepTest = stream != null ? stream.collect(Collectors.toList()) : null;
+                }
+                if (stepTestIdx<ginStepTest.size()) {
+                    displayResultLstV("Step cmd.. "+ginStepTest.get(stepTestIdx));
+                   // List<String> resultList = cmd.splitResult(ginStepTest.get(stepTestIdx));
+                   // for (String s : resultList) displayResultLstV("Result.. "+s);
+                   // updBorderPane();
+                    processResult(ginStepTest.get(stepTestIdx));
+                    stepTestIdx++;
+                } else {
+                    displayResultLstV("No more cmds");
+                }
+
+            }
+        });
+    }
     public void reloadApp(ActionEvent event) {
-        log.trace("RELOAD");
-        displayHyptoLstV("Reload pressed ... ");
-        List<String> lst = new ArrayList<>();
-        cmd = new VoiceCmds();
-        updBorderPane(lst);
+        //log.trace("RELOAD");
+        displayResultLstV("Reload pressed ... ");
+        reload();
     }
-    /*private void loadOpp() {
-        oppLable.add(opp00);
-        oppLable.add(opp01);
-        oppLable.add(opp02);
-        oppLable.add(opp03);
-        oppLable.add(opp04);
-        oppLable.add(opp05);
-        oppLable.add(opp06);
-        oppLable.add(opp07);
-        oppLable.add(opp08);
-        oppLable.add(opp09);
-        oppLable.add(opp10);
-    }*/
-    private void loadDissOpp() {
-        dissLable.add(oppDiss00);
-        dissLable.add(oppDiss01);
-        dissLable.add(oppDiss02);
-        dissLable.add(oppDiss03);
-        dissLable.add(oppDiss04);
-        dissLable.add(oppDiss05);
-        dissLable.add(oppDiss06);
-        dissLable.add(oppDiss07);
-        dissLable.add(oppDiss08);
-        dissLable.add(oppDiss09);
-        dissLable.add(oppDiss10);
-        dissLable.add(oppDiss11);
-        dissLable.add(oppDiss12);
-        dissLable.add(oppDiss13);
-        dissLable.add(oppDiss14);
-        dissLable.add(oppDiss15);
-        dissLable.add(oppDiss16);
-    }
-   /* private void loadCap() {
-        capLable.add(cap00);
-        capLable.add(cap01);
-        capLable.add(cap02);
-        capLable.add(cap03);
-        capLable.add(cap04);
-        capLable.add(cap05);
-        capLable.add(cap06);
-        capLable.add(cap07);
-        capLable.add(cap08);
-        capLable.add(cap09);
-        capLable.add(cap10);
-    }*/
     private void loadCapImgV() {
         capImageV.add(capImg00);
         capImageV.add(capImg01);
@@ -650,6 +669,46 @@ public class GinController implements Initializable {
         oppImageVSP.add(oppImg08SP);
         oppImageVSP.add(oppImg09SP);
         oppImageVSP.add(oppImg10SP);
+
+    }
+    private void loadOppImgVD() {
+        oppImageVD.add(oppDImg00);
+        oppImageVD.add(oppDImg01);
+        oppImageVD.add(oppDImg02);
+        oppImageVD.add(oppDImg03);
+        oppImageVD.add(oppDImg04);
+        oppImageVD.add(oppDImg05);
+        oppImageVD.add(oppDImg06);
+        oppImageVD.add(oppDImg07);
+        oppImageVD.add(oppDImg08);
+        oppImageVD.add(oppDImg09);
+        oppImageVD.add(oppDImg10);
+        oppImageVD.add(oppDImg11);
+        oppImageVD.add(oppDImg12);
+        oppImageVD.add(oppDImg13);
+        oppImageVD.add(oppDImg14);
+        oppImageVD.add(oppDImg15);
+        oppImageVD.add(oppDImg16);
+
+    }
+    private void loadOppImgVDSP() {
+        oppImageVDSP.add(oppDImg00SP);
+        oppImageVDSP.add(oppDImg01SP);
+        oppImageVDSP.add(oppDImg02SP);
+        oppImageVDSP.add(oppDImg03SP);
+        oppImageVDSP.add(oppDImg04SP);
+        oppImageVDSP.add(oppDImg05SP);
+        oppImageVDSP.add(oppDImg06SP);
+        oppImageVDSP.add(oppDImg07SP);
+        oppImageVDSP.add(oppDImg08SP);
+        oppImageVDSP.add(oppDImg09SP);
+        oppImageVDSP.add(oppDImg10SP);
+        oppImageVDSP.add(oppDImg11SP);
+        oppImageVDSP.add(oppDImg12SP);
+        oppImageVDSP.add(oppDImg13SP);
+        oppImageVDSP.add(oppDImg14SP);
+        oppImageVDSP.add(oppDImg15SP);
+        oppImageVDSP.add(oppDImg16SP);
 
     }
     private void loadClubs() {
