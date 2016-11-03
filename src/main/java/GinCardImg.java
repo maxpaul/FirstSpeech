@@ -10,9 +10,40 @@ public class GinCardImg {
     // Array of image file names
     private static final List<String> deckImgFnames = new ArrayList<>();
     private static final List<Image> images = new ArrayList<>();
+    private static final List<String> smallImgFnames = new ArrayList<>();
+    private static final List<Image> smallImgs = new ArrayList<>();
     private static final String imgFnamedir = "/imgs/deck01/";
+    private static final List<String> faceCards = new ArrayList<>();;
 
     public GinCardImg() {
+        faceCards.add("");
+        faceCards.add("JACK CLUB");
+        faceCards.add("QUEEN CLUB");
+        faceCards.add("KING CLUB");
+        faceCards.add("JACK DIAMOND");
+        faceCards.add("QUEEN DIAMOND");
+        faceCards.add("KING DIAMOND");
+        faceCards.add("JACK HEART");
+        faceCards.add("QUEEN HEART");
+        faceCards.add("KING HEART");
+        faceCards.add("JACK SPADE");
+        faceCards.add("QUEEN SPADE");
+        faceCards.add("KING SPADE");
+
+        smallImgFnames.add(imgFnamedir + "dsc02058.png");
+        smallImgFnames.add(imgFnamedir + "jack_of_clubs2.png");
+        smallImgFnames.add(imgFnamedir + "queen_of_clubs2.png");
+        smallImgFnames.add(imgFnamedir + "king_of_clubs2.png");
+        smallImgFnames.add(imgFnamedir + "jack_of_diamonds2.png");
+        smallImgFnames.add(imgFnamedir + "queen_of_diamonds2.png");
+        smallImgFnames.add(imgFnamedir + "king_of_diamonds2.png");
+        smallImgFnames.add(imgFnamedir + "jack_of_hearts2.png");
+        smallImgFnames.add(imgFnamedir + "queen_of_hearts2.png");
+        smallImgFnames.add(imgFnamedir + "king_of_hearts2.png");
+        smallImgFnames.add(imgFnamedir + "jack_of_spades2.png");
+        smallImgFnames.add(imgFnamedir + "queen_of_spades2.png");
+        smallImgFnames.add(imgFnamedir + "king_of_spades2.png");
+
         deckImgFnames.add(0,imgFnamedir + "dsc02058.png");
         deckImgFnames.add(1,imgFnamedir + "ace_of_clubs.png");
         deckImgFnames.add(2,imgFnamedir + "2_of_clubs.png");
@@ -70,18 +101,37 @@ public class GinCardImg {
         deckImgFnames.add(51,imgFnamedir + "queen_of_spades.png");
         deckImgFnames.add(52,imgFnamedir + "king_of_spades.png");
 
-
         for (String s : deckImgFnames) {
             images.add(new javafx.scene.image.Image(GinCardImg.class.getResourceAsStream(s)));
         }
+        for (String s : smallImgFnames) {
+            smallImgs.add(new javafx.scene.image.Image(GinCardImg.class.getResourceAsStream(s)));
+        }
     }
 
-    public String getImgPath(int idx){
+  /*  public String getImgPath(int idx){
         String imgPath = deckImgFnames.get(idx);
         return imgPath;
-    }
+    }*/
     public Image getImage(int idx){
         Image img = images.get(idx);
         return img;
+    }
+    public Image getImage(int idx, String card){
+        Image img;
+        if (getStrIdx(card, faceCards) !=-1) {
+            img = smallImgs.get(getStrIdx(card, faceCards));
+        } else {
+            img = images.get(idx);
+        }
+        return img;
+    }
+    public int getStrIdx(String str, List<String> lst) {
+        for (int i = 0; i < lst.size(); i++) {
+            if (lst.get(i).indexOf(str) != -1) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

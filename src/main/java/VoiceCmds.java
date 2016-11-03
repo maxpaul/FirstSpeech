@@ -20,11 +20,19 @@ public class VoiceCmds {
     public int oppIdx;
     public int dissIdx;
     public int deckCnt;
+    public int suitCnt;
+    public int rankCnt;
+    public int possibilities;
     public String lastCmd;
     public String sortSts;
 
     LinkedList<String> handCap;
     LinkedList<String> handCapSort;
+    LinkedList<String> handCapSortFlag;
+    LinkedList<String> rankSort;
+    LinkedList<String> rankSortFlag;
+    LinkedList<String> suitSort;
+    LinkedList<String> suitSortFlag;
     LinkedList<String> handOpp;
     LinkedList<String> dissOpp;
     LinkedList<String> capLstCmds;
@@ -37,15 +45,22 @@ public class VoiceCmds {
     private static final String[] CMDS = {"DEAL", "REMOVE", "ADD", "SORT", "SORTRANK", "PASS", "DECK", "PILE", "END", "SET", "FIX","FINISH"};
     private static final String[] SUIT = {"CLUB", "DIAMOND", "HEART", "SPADE"};
     private static final String[] RANK = {"ACE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "JACK", "QUEEN", "KING"};
+    private static final int[] COUNT= {1,2,3,4,5,6,7,8,9,10,10,10,10};
     // Not used yet so keep
     private static final String[] STAGES = {"LOADING", "DEALING", "ADDREMOVE", "PASSING", "PLAYING", "ENDREQUEST","ENDING", "FINISHING","FINISHED"};
     static Logger log = Logger.getLogger(VoiceCmds.class.getName());
 
     public VoiceCmds() {
         handCap = new LinkedList<>();
-        // declare and initalize the handcap sort flag
-        handCapSort = new LinkedList<>();
-        for (int i=0;i<11;i++) handCapSort.add(i,"");
+        // declare and initalize the sort lists
+        rankSort = new LinkedList<>();
+        for (int i=0;i<11;i++) rankSort.add(i,"");
+        rankSortFlag = new LinkedList<>();
+        for (int i=0;i<11;i++) rankSortFlag.add(i,"");
+        suitSort = new LinkedList<>();
+        for (int i=0;i<11;i++) suitSort.add(i,"");
+        suitSortFlag = new LinkedList<>();
+        for (int i=0;i<11;i++) suitSortFlag.add(i,"");
         handOpp = new LinkedList<>();
         dissOpp = new LinkedList<>();
         capLstCmds = new LinkedList<>();
@@ -64,41 +79,171 @@ public class VoiceCmds {
         setOppIdx(0);
         setDissIdx(0);
         createDeck();
-        // used to store messages to retrieved by controller.
+        // Testing & debugging
+        // used to store messages to be displayed by controller.
         resetMsgQueue();
+    }
+    // evaluate the options of card selection this list in will have
+    // subsitituted the pile card or a selected deck card and return a
+    // string of combinations<space>suitCnt<space>rankCnt
+    public String evalOptions(LinkedList<String> optLstIn) {
+        //List <String> evalLst = new ArrayList<>();
+        // call the rank sort routines
+        List<String> sortedList = sortRank(optLstIn);
+        int rankOptCnt = 0;
+        for (String s : sortedList) {
+            // eg. "00!ACE CLUB *"
+            String[] spl = s.split("!");
+            // eg. [00] [ACE CLUB *]
+            String[] spl2 = spl[1].split("\\s+");
+            // add the sort indicator
+            if (spl2.length==2)
+                rankOptCnt += getRankCntV(spl2[0]);
+        }
+        // call the suit sort routines
+        sortedList = sortSuit(optLstIn);
+        int suitOptCnt = 0;
+        for (String s : sortedList) {
+            // eg. "00!ACE CLUB *"
+            String[] spl = s.split("!");
+            // eg. [00] [ACE CLUB *]
+            String[] spl2 = spl[1].split("\\s+");
+            // add the sort indicator
+            if (spl2.length==2) {
+                suitOptCnt += getRankCntV(spl2[0]);
+            }
+        }
+        return String.valueOf(crtCombs(sortedList)+" "+rankOptCnt+" "+suitOptCnt);
+    }
+    //add the sort Rank prefix XX!
+    private LinkedList<String> addRankPrefx(LinkedList<String> lstIn) {
+        LinkedList<String> lstOut = new LinkedList<>();
+        for (int i=0;i<lstIn.size();i++) {
+            if (!lstIn.get(i).equals("")) {
+                String[] spl = lstIn.get(i).split("\\s+");
+                int rankIdx = getStrIdxArry(spl[0], RANK);
+                String splFormt = String.format("%02d", rankIdx);
+                lstOut.add(splFormt + "!" + lstIn.get(i));
+            }
+        }
+
+        Collections.sort(lstOut);
+        return lstOut;
+    }
+    //add the sort Suit prefix XXX!
+    private LinkedList<String> addSuitPrefx(LinkedList<String> lstIn) {
+        LinkedList<String> lstOut = new LinkedList<>();
+        for (int i=0;i<lstIn.size();i++) {
+            if (!lstIn.get(i).equals("")) {
+                String[] spl = lstIn.get(i).split("\\s+");
+                int suitIdx = getStrIdxArry(spl[1], SUIT);
+                int rankIdx = getStrIdxArry(spl[0], RANK);
+                String splFormt = String.format("%02d", rankIdx);
+                lstOut.add(suitIdx + splFormt + "!" + lstIn.get(i));
+            }
+        }
+
+        Collections.sort(lstOut);
+        return lstOut;
+    }
+    private List<String> sortSuit(LinkedList<String> lstIn) {
+
+        List<String> sortedListPrefix = addSuitPrefx(lstIn);
+        List<String> sortedList = sortSeq(sortedListPrefix);
+        // having sorted by rank are there cards not grouped by rank
+        // check if these card can be group by seq.
+        LinkedList<String> subRankSortIn = new LinkedList<>();
+        // create a sub list from the items not grouped by suit
+        // so items not flaged with '*'
+        for (String s : sortedList) {
+            if (!s.equals("")) {
+                String[] spl = s.split("!"); // eg. "000!ACE CLUB *"
+                String[] spl2 = spl[1].split("\\s+"); // eg. [000] [ACE CLUB *]
+                // check and omit items included in the subsequent sort
+                // so any item with a '*'
+                if (spl2.length==2) subRankSortIn.add(spl[1]); // add "ACE SPADE"
+            }
+        }
+        // create the sequence prefix eg 100! ACE SPADE
+        sortedListPrefix = addRankPrefx(subRankSortIn);
+        // // sortedRankSuit
+        sortedListPrefix = sort3and4(sortedListPrefix);
+        //remove all but items with an '*'
+        for (int i=0; i<sortedList.size();i++) {
+            if (!sortedList.get(i).equals("")) {
+                String[] spl = sortedList.get(i).split("!"); // eg. "00!ACE CLUB *"
+                String[] spl2 = spl[1].split("\\s+"); // eg. [00] [ACE CLUB *]
+                // check and omit items included in the subsequent sort
+                // so any item with a '*'
+                if (spl2.length==3) sortedListPrefix.add(sortedList.get(i)); // add "ACE SPADE"
+            }
+        }
+        sortedList = new ArrayList<>();
+
+        for (String s : sortedListPrefix) {
+            if (!s.equals("")) {
+                sortedList.add(s);
+            }
+        }
+        Collections.sort(sortedList);
+        return sortedList;
+    }
+    private List<String> sortRank(LinkedList<String> lstIn) {
+        List<String> sortedListPrefix;
+        List<String> sortedList;
+        sortedListPrefix = addRankPrefx(lstIn);
+        sortedList = sort3and4(sortedListPrefix);
+        // having sorted by rank are there cards not grouped by rank
+        // check if these card can be group by seq.
+        LinkedList<String> subSeqSortIn = new LinkedList<>();
+        // create a sub list from the items not grouped by rank
+        // so items not flaged with '*'
+        for (String s : sortedList) {
+            if (!s.equals("")) {
+                String[] spl = s.split("!"); // eg. "00!ACE CLUB *"
+                String[] spl2 = spl[1].split("\\s+"); // eg. [00] [ACE CLUB *]
+                // check and omit items included in the subsequent sort
+                // so any item with a '*'
+                if (spl2.length==2) subSeqSortIn.add(spl[1]); // add "ACE SPADE"
+            }
+        }
+        // create the sequence prefix eg 100! ACE SPADE
+        sortedListPrefix = addSuitPrefx(subSeqSortIn);
+        // sortedSuitRank
+        sortedListPrefix = sortSeq(sortedListPrefix);
+        //remove all but items with an '*'
+        for (int i=0; i<sortedList.size();i++) {
+            if (!sortedList.get(i).equals("")) {
+                String[] spl = sortedList.get(i).split("!"); // eg. "00!ACE CLUB *"
+                String[] spl2 = spl[1].split("\\s+"); // eg. [00] [ACE CLUB *]
+                // check and omit items included in the subsequent sort
+                // so any item with a '*'
+                if (spl2.length==3) sortedListPrefix.add(sortedList.get(i)); // add "ACE SPADE"
+            }
+        }
+        sortedList = new ArrayList<>();
+
+        for (String s : sortedListPrefix) {
+            if (!s.equals("")) {
+                sortedList.add(s);
+            }
+        }
+        Collections.sort(sortedList);
+        return sortedList;
     }
     // sort handCap array by rank or suit and rank
     public void sortHandCap() {
 
-        List<String> sortedList =new ArrayList<>();
+        LinkedList<String> handIn = new LinkedList<>();
+        // add to remove the Deck card that is placed in handCap[0]
+        for (int i=1;i<handCap.size();i++) handIn.add(handCap.get(i));
+        // call the rank sort routines
+        List<String> sortedList = sortRank(handIn);
 
-        if(getSortSts().equals("SORTRANK")) { // sort by rank
-            for (String s : handCap) {
-                if (!s.equals("")) {
-                    String[] spl = s.split("\\s+");
-                    int rankIdx = getStrIdxArry(spl[0], RANK);
-                    String splFormt = String.format("%02d", rankIdx);
-                    sortedList.add(splFormt + "!" + s);
-                }
-            }
-            Collections.sort(sortedList);
-            sortedList = sort3and4(sortedList);
-        } else { // sort by suit and Rank
-            for (String s : handCap) {
-                if (!s.equals("")) {
-                    String[] spl = s.split("\\s+");
-                    int suitIdx = getStrIdxArry(spl[1], SUIT);
-                    int rankIdx = getStrIdxArry(spl[0], RANK);
-                    String splFormt = String.format("%02d", rankIdx);
-                    sortedList.add(suitIdx + splFormt + "!" + s);
-                }
-            }
-            Collections.sort(sortedList);
-            sortedList = sortSeq(sortedList);
-        }
-        Collections.sort(sortedList);
-        resetHands(handCap);
-        resetHands(handCapSort);
+        // set rank sort objects
+        resetHands(rankSortFlag);
+        resetHands(rankSort);
+        int handCnt = 0;
         for (String s : sortedList) {
             // eg. "00!ACE CLUB *"
             String[] spl = s.split("!");
@@ -107,15 +252,127 @@ public class VoiceCmds {
             String[] spl2 = spl[1].split("\\s+");
 
             //eg. [ACE] [CLUB] [*]
-            handCap.add(spl2[0]+" "+spl2[1]); // "ACE CLUB"
+            rankSort.add(spl2[0]+" "+spl2[1]); // "ACE CLUB"
 
             // add the sort indicator
             if (spl2.length==3) {
-                handCapSort.add(spl2[2]); // "*"
+                rankSortFlag.add(spl2[2]); // "*"
             } else {
-                handCapSort.add("");
+                rankSortFlag.add("");
+                handCnt += getRankCntV(spl2[0]);
             }
         }
+
+        setRankCnt(handCnt);
+
+        // add to remove the Deck card that is placed in handCap[0]
+        handIn = new LinkedList<>();
+        for (int i=1;i<handCap.size();i++) handIn.add(handCap.get(i));
+        // call the suit sort routines
+        sortedList = sortSuit(handIn);
+
+        // set suit sort objects
+        resetHands(suitSortFlag);
+        resetHands(suitSort);
+        handCnt = 0;
+        for (String s : sortedList) {
+            // eg. "00!ACE CLUB *"
+            String[] spl = s.split("!");
+
+            // eg. [00] [ACE CLUB *]
+            String[] spl2 = spl[1].split("\\s+");
+
+            //eg. [ACE] [CLUB] [*]
+            suitSort.add(spl2[0]+" "+spl2[1]); // "ACE CLUB"
+
+            // add the sort indicator
+            if (spl2.length==3) {
+                suitSortFlag.add(spl2[2]); // "*"
+            } else {
+                suitSortFlag.add("");
+                handCnt += getRankCntV(spl2[0]);
+
+            }
+        }
+        setSuitCnt(handCnt);
+        // create the 2 3 and 4 card combinations for AI play
+        setPossibilities(crtCombs(sortedList));
+    }
+    // method to create the 2 3 & 4 card combinations to be used for the AI play
+    private int crtCombs(List<String> lstIn) {
+        LinkedList<String > rawLst= new LinkedList<>();
+        for (String s : lstIn) {
+            // eg. "00!ACE CLUB *"
+            String[] spl = s.split("!");
+            // eg. [00] [ACE CLUB *]
+            String[] spl2 = spl[1].split("\\s+");
+            // "ACE CLUB" with no "*"
+            if (spl2.length==2) rawLst.add(spl2[0]+" "+spl2[1]);
+        }
+        // add rank prefix and return sorted lst
+        LinkedList<String> rawLstPrefx = addRankPrefx(rawLst);
+        List<String> setOf2and2 = new ArrayList<>();
+        List<String> setOf2and1 = new ArrayList<>();
+        for (int i = 1;i<rawLstPrefx.size();i++) {
+            // eg. "00!ACE CLUB *"
+            String[] spl = rawLstPrefx.get(i).split("!");
+            // eg. [00] [ACE CLUB]
+            String[] spl2 = spl[1].split("\\s+");
+            String[] splPrev = rawLstPrefx.get(i-1).split("!");
+            String[] splPrev2 = splPrev[1].split("\\s+");
+            // consecutive ranks are equal store both with deadwood count
+            int handCnt = getRankCntV(spl2[0])*2;
+
+            if (spl2[0].equals(splPrev2[0])) {
+                setOf2and2.add(spl[1]+" "+splPrev[1]+" "+handCnt);
+                String s = "2of2 cards in " + spl2[0]+spl2[1] +" "+ splPrev2[0]+splPrev2[1];
+                msgQueue.add(s);
+                // before the add check if the cards are status deck
+              //  int deckCnt = chkDecksts(splPrev[1],spl[1]);
+               for (int j=0;j<SUIT.length;j++) {
+                   String card = spl2[0] + " " + SUIT[j];
+                   s=getCardStatus(getStrIdx(card, deckStr));
+                   msgQueue.add(s+" "+card);
+               }
+
+            }
+        }
+       // msgQueue.add("end crt rank 2 card "+getCapIdx());
+       // for (String s : setOf2) msgQueue.add(s);
+
+        // add suit prefix and return sorted lst
+        rawLstPrefx = addSuitPrefx(rawLst);
+        List<String> seqOf2 = new ArrayList<>();
+        List<String> seqOf2Hole = new ArrayList<>();
+        for (int i = 1;i<rawLstPrefx.size();i++) {
+            // eg. "000!ACE CLUB *"
+            String[] spl = rawLstPrefx.get(i).split("!");
+            // eg. [000] [ACE CLUB]
+            String[] spl2 = spl[1].split("\\s+");
+            String[] splPrev = rawLstPrefx.get(i - 1).split("!");
+            String[] splPrev2 = splPrev[1].split("\\s+");
+
+            if (spl[0].substring(0,1).equals(splPrev[0].substring(0,1))) {// cards are of the same suit
+                int intspl = Integer.parseInt(spl[0].substring(1, 3));
+                int intsplPrev = Integer.parseInt(splPrev[0].substring(1, 3));
+                int handCnt = getRankCntV(spl2[0]) + getRankCntV(splPrev2[0]);
+                if (intspl - 1 == intsplPrev) {
+                    if (intsplPrev == 0 || intspl ==12) { // it's an Ace or a king
+                        seqOf2Hole.add(splPrev[1] + " " + spl[1] + " " + handCnt);
+                    } else
+                    seqOf2.add(splPrev[1] + " " + spl[1] + " " + handCnt);
+                }
+                if (intspl - 2 == intsplPrev)
+                    seqOf2Hole.add(splPrev[1] + " " + spl[1] + " " + handCnt);
+            }
+        }
+    /*    msgQueue.add("end crt seq 2 card ");
+        for (String s : seqOf2) msgQueue.add(s+" "+seqOf2.size()*2);
+        msgQueue.add("end crt seqHole 2 card ");
+        for (String s : seqOf2Hole) msgQueue.add(s+" "+seqOf2Hole.size());
+        msgQueue.add("possibilites " + ((setOf2.size()*2)+(seqOf2.size()*2)+seqOf2Hole.size()));
+    */
+        return ((setOf2and2.size()*2)+(seqOf2.size()*2)+seqOf2Hole.size());
     }
     // Flag sort rank 3&4 of kind
     public List<String> sort3and4(List<String> lst) {
@@ -141,6 +398,8 @@ public class VoiceCmds {
             } else {
                 sorted3and4.add("11" + s);
             }
+        //    msgQueue.add("end of sort 3&4 cap idx "+getCapIdx());
+         //   for (int i=0;i<sorted3and4.size();i++) msgQueue.add(sorted3and4.get(i));
         }
         return sorted3and4;
     }
@@ -169,9 +428,9 @@ public class VoiceCmds {
             prevRank=rankInt;
             seqCntArry[i] = seqCnt;
 
-            msgQueue.add(lst.get(i)+" suit int "+ suitInt+" rank int "+rankInt);
+          //  msgQueue.add(lst.get(i)+" suit int "+ suitInt+" rank int "+rankInt);
         }
-        for (int i=0;i<seqCntArry.length;i++) msgQueue.add(seqCntArry[i].toString());
+       // for (int i=0;i<seqCntArry.length;i++) msgQueue.add(seqCntArry[i].toString());
 
         // Setup temp array to store the idx values of the cards to be flagged
         // as sequenctial incremental sets of 3 or more.
@@ -188,7 +447,7 @@ public class VoiceCmds {
             }
         }
 
-        for (int i=0;i<seqUpdArry.length;i++) msgQueue.add(seqUpdArry[i].toString());
+     //   for (int i=0;i<seqUpdArry.length;i++) msgQueue.add(seqUpdArry[i].toString());
         // Iterate back from the index value for the count value 3 or more
         for (int i=0;i<seqUpdArry.length;i++) {
             if (seqUpdArry[i] !=0) {
@@ -208,7 +467,8 @@ public class VoiceCmds {
                 lst.set(i,"11"+ lst.get(i));
             }
         }
-        for (String s : lst) msgQueue.add(s);
+      //  msgQueue.add("end seq sort cap idx "+getCapIdx());
+      //  for (String s : lst) msgQueue.add(s);
         return lst;
     }
     public void resetMsgQueue() {
@@ -234,7 +494,7 @@ public class VoiceCmds {
         }
     }
     // status of sort equal SORT or SORTRANK or ""
-    public void setSortSts(String sortSts) {this.sortSts = sortSts;;}
+    public void setSortSts(String sortSts) {this.sortSts = sortSts;}
     public String getSortSts() {return sortSts;}
     // set card status
     public void setCardStatus(int idx, String sts) {
@@ -255,6 +515,30 @@ public class VoiceCmds {
                 cardStatus.add("DECK");
             }
         }
+    }
+    public int getPossibilities() {
+        return possibilities;
+    }
+    private void setPossibilities(int possibilities) {
+        this.possibilities = possibilities;;
+    }
+    public int getRankCnt() {
+        return rankCnt;
+    }
+    private void setRankCnt(int rankCnt) {
+        this.rankCnt = rankCnt;;
+    }
+    public int getSuitCnt() {
+        return suitCnt;
+    }
+    private void setSuitCnt(int suitCnt) {
+        this.suitCnt = suitCnt;;
+    }
+    // return the count value of the rank eg. jack =10 ace = 1
+    public int getRankCntV(String str) {
+        String[] spl = str.split("\\s+");
+        int cntV = COUNT[getStrIdxArry(spl[0], RANK)];
+        return cntV;
     }
     // return the index of the list based on card string.
     public int getStrIdxArry(String str, String[] lst) {
@@ -345,8 +629,17 @@ public class VoiceCmds {
     public List<String> getHandCap() {
         return handCap;
     }
-    public List<String> getHandCapSort() {
-        return handCapSort;
+    public List<String> getRankSort() {
+        return rankSort;
+    }
+    public List<String> getRankSortFlag() {
+        return rankSortFlag;
+    }
+    public List<String> getSuitSort() {
+        return suitSort;
+    }
+    public List<String> getSuitSortFlag() {
+        return suitSortFlag;
     }
     public List<String> getDissOpp() {
         return dissOpp;
@@ -442,10 +735,11 @@ public class VoiceCmds {
                             break;
                         // if sts1 is deck it's the first pile card
                         // so it can be updated to DECK which was the previous status.
-                        // The exitsting status will reflect what player took the card
+                        // The existing status will reflect what player took the card
                         // so CAP or OPP and can be removed from the hand.  The pass card
                         // gets added back.  Add the pile card to dissOpp.set(0)
                         case "DECK": // sts is CAPD
+                   //         msgQueue.add("**fix set to Deck" + card1);
                             setCardStatus(getStrIdx(card1, deckStr), "DECK");
                             dissOpp.set(0, card1);
 
@@ -455,6 +749,7 @@ public class VoiceCmds {
                                 setCardStatus(getStrIdx(card2, deckStr), "CAP");
                             } else { // OPP took the pile card
                                 if (sts2.equals("OPP")) { // card came from handOpp
+                       //             msgQueue.add("fix remove handopp fst and add "+card2);
                                     handOpp.removeFirst();
                                     handOpp.add(card2);
                                     setCardStatus(getStrIdx(card2, deckStr), "OPP");
@@ -462,12 +757,15 @@ public class VoiceCmds {
                                 } else { // pass card was a DECK card
                                     int idx = getStrIdx(card1, handOpp);
                                     if (idx != -1) {
+                           //             msgQueue.add("fix remove handopp idx and !add "+card1);
                                         handOpp.remove(idx);
                                         setOppIdx(getOppIdx() - 1);
                                     }
                                     setCardStatus(getStrIdx(card2, deckStr), "DECK");
                                 }
                             }
+                            // Allow for fix during the first Passing stage
+                            if (getDeckCnt()==31) setGameStage("ADDREMOVE");
                             break;
                         default:
                             break;
@@ -478,7 +776,7 @@ public class VoiceCmds {
         }
     }
     public void processCmds(String cmd, String card) {
-        //List<String> sorting;
+
         setLastCmd("");
 
         switch (cmd) {
@@ -561,22 +859,22 @@ public class VoiceCmds {
                 }
                 break;
             case "SORTRANK":
-                if (!handCap.get(0).equals("") || !handOpp.get(0).equals("")) break;
+             /*   if (!handCap.get(0).equals("") || !handOpp.get(0).equals("")) break;
                 if (getGameStage().equals("PASSING") ||
                         getGameStage().equals("ADDREMOVE") ||
-                        getGameStage().equals("PLAYING")) {
+                        getGameStage().equals("PLAYING")) {*/
                     setSortSts(cmd);
-                    sortHandCap();
-                }
+               //     sortHandCap();
+               // }
                 break;
             case "SORT":
-                if (!handCap.get(0).equals("") || !handOpp.get(0).equals("")) break;
+             /*   if (!handCap.get(0).equals("") || !handOpp.get(0).equals("")) break;
                 if (getGameStage().equals("PASSING") ||
                         getGameStage().equals("ADDREMOVE") ||
-                        getGameStage().equals("PLAYING")) {
+                        getGameStage().equals("PLAYING")) {*/
                     setSortSts(cmd);
-                    sortHandCap();
-                }
+               //     sortHandCap();
+               // }
                 break;
             case "SET":
                 if (getGameStage().equals("PASSING") ||
@@ -590,7 +888,7 @@ public class VoiceCmds {
                 break;
             case "DECK":
                 if (!getGameStage().equals("PLAYING")) break;
-                if (!whosTurn) break; // only a valid opp command.
+                if (!whosTurn) break; // only a valid cap command.
 
                 if (card.equals("")) {
                     setLastCmd(cmd);
@@ -614,22 +912,24 @@ public class VoiceCmds {
                     if (getCardStatus(getStrIdx(dissOpp.get(0), deckStr)).equals("DECK")) card = dissOpp.get(0);
                     if (whosTurn) { // CAP if true
                         if (card.equals("") && !dissOpp.get(1).equals("")) card=dissOpp.get(1);
-                        if (getStrIdx(card, deckStr) == -1) break;
+                     //   if (getStrIdx(card, deckStr) == -1) break;
                         if (getGameStage().equals("PLAYING") && !getCardStatus(getStrIdx(card, deckStr)).equals("OPPD")) break;
                         setGameStage("PLAYING");
                         saveLstCmd(cmd);
                         saveLstCmd(card + " " + getCardStatus(getStrIdx(card, deckStr)));
                         setCardStatus(getStrIdx(card, deckStr), "CAPP");
+
                         handCap.set(0,card);
 
                     } else { // OPP
                         if (card.equals("") && !dissOpp.get(0).equals("")) card=dissOpp.get(0);
-                        if (getStrIdx(card, deckStr) == -1) break;
+                     //   if (getStrIdx(card, deckStr) == -1) break;
                         if (getGameStage().equals("PLAYING") && !getCardStatus(getStrIdx(card, deckStr)).equals("CAPD")) break;
                         setGameStage("PLAYING");
                         saveLstCmd(cmd);
                         saveLstCmd(card + " " + getCardStatus(getStrIdx(card, deckStr)));
                         setCardStatus(getStrIdx(card, deckStr), "OPPP");
+                   //     msgQueue.add("handOPP pile add " +card);
                         handOpp.set(0,card);
                         dissOpp.set(0, "");
                     }
@@ -651,8 +951,6 @@ public class VoiceCmds {
                         setLastCmd(cmd);
                         saveLstCmd(cmd);
                     } else {
-                        msgQueue.add("card " +card);
-                        msgQueue.add("dissOpp "+ dissOpp.get(0) +" deck sts "+getCardStatus(getStrIdx(dissOpp.get(0), deckStr)));
                         // This line of code will handle the first pass sequence after the deal.
                       //  if (getCardStatus(getStrIdx(dissOpp.get(0), deckStr)).equals("DECK")) card = dissOpp.get(0);
                      //   if (!getGameStage().equals("PLAYING")) setGameStage("PLAYING");
@@ -698,9 +996,11 @@ public class VoiceCmds {
                                     dissOpp.set(i,dissOpp.get(i-1));
                                 }
                                 dissOpp.set(1,card);
-
+                       //         msgQueue.add("before handOpp Check");
                                 if (!handOpp.get(0).equals("")) {
+                        //            msgQueue.add("**passes so handOpp not blank");
                                     if (getCardStatus(getStrIdx(card, deckStr)).equals("DECK")) {
+                           //             msgQueue.add("**pass set to OPP" + handOpp.get(0));
                                         setCardStatus(getStrIdx(handOpp.get(0), deckStr), "OPP");
                                         setOppIdx(getOppIdx() + 1);
                                         setHands(getOppIdx(), handOpp.get(0), handOpp);
@@ -768,7 +1068,7 @@ public class VoiceCmds {
                                         setCardStatus(getStrIdx(cardLst, deckStr), spl[2]);
                                         handCap.set(0,"");
                                         log.trace("FIX");
-                                        msgQueue.add("deckcnt "+String.valueOf(getDeckCnt()));
+                             //           msgQueue.add("deckcnt "+String.valueOf(getDeckCnt()));
                                         // Allow for fix during the first Passing stage
                                         if (getDeckCnt()==31) setGameStage("ADDREMOVE");
                                         break;
@@ -800,7 +1100,7 @@ public class VoiceCmds {
                                     handOpp.set(0,"");
                                     dissOpp.set(0,cardLst);
                                     log.trace("FIX");
-                                    msgQueue.add("deckcnt "+String.valueOf(getDeckCnt()));
+                           //         msgQueue.add("deckcnt "+String.valueOf(getDeckCnt()));
                                     // Allow for fix during the first Passing stage
                                     if (getDeckCnt()==31) setGameStage("ADDREMOVE");
                                     break;
@@ -975,7 +1275,7 @@ public class VoiceCmds {
             }
         }
 
-        msgQueue.add("result.."+ lnkResult.get(lnkResult.size()-1).toString());
+
         return lnkResultWithIdx;
     }
     public LinkedList<String> validVoiceResults(List<String> resultList) {

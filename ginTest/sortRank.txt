@@ -1,0 +1,37 @@
+            sortedListPrefix = addRankPrefx(handCap);
+            sortedList = sort3and4(sortedListPrefix);
+            // having sorted by rank are there cards not grouped by rank
+            // check if these card can be group by seq.
+            LinkedList<String> subSeqSortIn = new LinkedList<>();
+            // create a sub list from the items not grouped by rank
+            // so items not flaged with '*'
+            for (String s : sortedList) {
+                if (!s.equals("")) {
+                    String[] spl = s.split("!"); // eg. "00!ACE CLUB *"
+                    String[] spl2 = spl[1].split("\\s+"); // eg. [00] [ACE CLUB *]
+                    // check and omit items included in the subsequent sort
+                    // so any item with a '*'
+                    if (spl2.length==2) subSeqSortIn.add(spl[1]); // add "ACE SPADE"
+                }
+            }
+            // create the sequence prefix eg 100! ACE SPADE
+            sortedListPrefix = addSuitPrefx(subSeqSortIn);
+            // sortedSuitRank
+            sortedListPrefix = sortSeq(sortedListPrefix);
+            //remove all but items with an '*'
+            for (int i=0; i<sortedList.size();i++) {
+                if (!sortedList.get(i).equals("")) {
+                    String[] spl = sortedList.get(i).split("!"); // eg. "00!ACE CLUB *"
+                    String[] spl2 = spl[1].split("\\s+"); // eg. [00] [ACE CLUB *]
+                    // check and omit items included in the subsequent sort
+                    // so any item with a '*'
+                    if (spl2.length==3) sortedListPrefix.add(sortedList.get(i)); // add "ACE SPADE"
+                }
+            }
+            sortedList = new ArrayList<>();
+
+            for (String s : sortedListPrefix) {
+                if (!s.equals("")) {
+                    sortedList.add(s);
+                }
+            }

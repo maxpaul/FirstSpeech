@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.apache.log4j.Logger;
+import org.apache.log4j.varia.StringMatchFilter;
 
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,6 +39,8 @@ public class GinController implements Initializable {
     @FXML
     private ListView<String> sphinxResultLstV;
     @FXML
+    private ListView<String> possLstV;
+    @FXML
     private Label club00, club01, club02, club03, club04, club05, club06, club07, club08, club09, club10, club11, club12, club13;
     @FXML
     private Label dmon00, dmon01, dmon02, dmon03, dmon04, dmon05, dmon06, dmon07, dmon08, dmon09, dmon10, dmon11, dmon12, dmon13;
@@ -47,6 +51,18 @@ public class GinController implements Initializable {
 
     @FXML
     private Label capTurn, oppTurn, disCardCnt, disGameStage;
+    @FXML
+    private Label rankCnt01, suitCnt01, combs01, chg01;
+    @FXML
+    private Label rankCnt02, suitCnt02, combs02, chg02;
+    @FXML
+    private Label rankCnt03, suitCnt03, combs03, chg03;
+    @FXML
+    private Label rankCnt04, suitCnt04, combs04, chg04;
+    @FXML
+    private Label rankCnt05, suitCnt05, combs05, chg05;
+    @FXML
+    private Label rankCnt06, suitCnt06, combs06, chg06;
     @FXML
     private Button reloadButton, testButton, cmdButton, sysOut;
     @FXML
@@ -67,7 +83,10 @@ public class GinController implements Initializable {
     private ImageView oppDImg00, oppDImg01, oppDImg02, oppDImg03, oppDImg04, oppDImg05, oppDImg06, oppDImg07, oppDImg08, oppDImg09, oppDImg10, oppDImg11, oppDImg12, oppDImg13, oppDImg14, oppDImg15, oppDImg16;
     @FXML
     private StackPane oppDImg00SP, oppDImg01SP, oppDImg02SP, oppDImg03SP, oppDImg04SP, oppDImg05SP, oppDImg06SP, oppDImg07SP, oppDImg08SP, oppDImg09SP, oppDImg10SP, oppDImg11SP, oppDImg12SP, oppDImg13SP, oppDImg14SP, oppDImg15SP, oppDImg16SP;
-
+    @FXML
+    private ImageView playImg01, playImg02, playImg03, playImg04, playImg05, playImg06;
+    @FXML
+    private ImageView choiceImg01, choiceImg02, choiceImg03, choiceImg04, choiceImg05, choiceImg06;
     @FXML
     private ImageView pileImg, deckImg;
     @FXML
@@ -81,10 +100,17 @@ public class GinController implements Initializable {
     private List<ImageView> oppImageVD =new ArrayList<>();
     private List<StackPane> oppImageVDSP =new ArrayList<>();
 
+    private List<ImageView> choiceImgV =new ArrayList<>();
+
     private List<Label> clubLable =new ArrayList<>();
     private List<Label> dmonLable =new ArrayList<>();
     private List<Label> heartLable =new ArrayList<>();
     private List<Label> spadeLable =new ArrayList<>();
+
+    private List<Label> rankCnt =new ArrayList<>();
+    private List<Label> suitCnt =new ArrayList<>();
+    private List<Label> combsCnt =new ArrayList<>();
+    private List<Label> chgCnt =new ArrayList<>();
 
     // URL for Sphinx files
     // www.speech.cs.cmu.edu/tools/lmtool-new.html
@@ -95,6 +121,7 @@ public class GinController implements Initializable {
     List<String> handDissOppLst = new ArrayList<>();
     List<String> handOppLst = new ArrayList<>();
     List<String> handCapSort = new ArrayList<>();
+    List<String> handCapSortFlag = new ArrayList<>();
 
     ObservableList<String> cmdTypeLst= FXCollections.observableArrayList("DEAL", "REMOVE", "ADD", "SORT", "SORTRANK", "PASS", "DECK", "PILE", "END", "SET", "FIX","FINISH");
     ObservableList<String> cmdRankLst= FXCollections.observableArrayList("ACE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "JACK", "QUEEN", "KING");
@@ -102,6 +129,7 @@ public class GinController implements Initializable {
 
     ObservableList<String> sphinxHypotItems = FXCollections.observableArrayList();
     ObservableList<String> sphinxResultItems = FXCollections.observableArrayList();
+    ObservableList<String> possItems = FXCollections.observableArrayList();
 
     List<String> ginStepTest;
     boolean fstStep = true;
@@ -145,10 +173,7 @@ public class GinController implements Initializable {
 
                     while ((result2 = recognizer2.getResult()) != null) {
 
-                      //  List<String> resultList = new ArrayList<>();
                         if (togVoice.isSelected()) {
-
-                           // resultList.add(result2.getHypothesis());
                             displayHyptoLstV("sphinx Hypothesis ...");
                             displayHyptoLstV(result2.getHypothesis().toString());
                             //  Display Recognized words/times);
@@ -156,17 +181,6 @@ public class GinController implements Initializable {
                                 displayHyptoLstV(r.toString());
                             }
                             processResult(result2.getHypothesis());
-                            //resultList = cmd.splitResult(result2.getHypothesis());
-
-                            //List<String> resultList = cmd.splitResult(s);
-                            // check if the finished
-                         /*   boolean fin = false;
-                            for (String s : resultList) {
-                                displayResultLstV(s);
-                                if (s.equals("FINISH")) fin=true;
-                            }
-                            if (fin) reload();
-                            if (!fin) updBorderPane();*/
                         }
                         break;
                     }
@@ -189,6 +203,8 @@ public class GinController implements Initializable {
         loadOppImgVSP();
         loadOppImgVD();
         loadOppImgVDSP();
+        loadChoiceImgV();
+        loadEvalCnt();
         // load deck display titles
         loadClubs();
         loadDmon();
@@ -231,7 +247,16 @@ public class GinController implements Initializable {
             @Override
             public void run() {
                 List<String> handCap = cmd.getHandCap();
-                handCapSort = cmd.getHandCapSort();
+                cmd.sortHandCap();
+
+                if (cmd.getSortSts().equals("SORT")) {
+                    handCapSort = cmd.getRankSort();
+                    handCapSortFlag = cmd.getRankSortFlag();
+                } else {
+                    handCapSort = cmd.getSuitSort();
+                    handCapSortFlag = cmd.getSuitSortFlag();
+                }
+
                 List<String> cardStatus = cmd.getcardStatusLst();
                 List<String> dissOpp = cmd.getDissOpp();
                 List<String> handOpp = cmd.getHandOpp();
@@ -241,17 +266,167 @@ public class GinController implements Initializable {
                 setHandOpp(handOpp);
                 setHandDissOpp(dissOpp);
 
-                updHandImg(oppImageV, handOppLst, oppImageVSP, false);
-                updHandImg(oppImageVD, handDissOppLst, oppImageVDSP, false);
-
                 // display any info message added to queue
                 dspMsgQueue(cmd.getMsgQueue());
 
-                updHandImg(capImageV, handCapLst, capImageVSP, true );
+                updHandImg(capImageV, handCapSort, capImageVSP, true );
+                updHandImg(oppImageV, handOppLst, oppImageVSP, false);
+                updHandImg(oppImageVD, handDissOppLst, oppImageVDSP, false);
+
                 updDeckPileImg();
                 updTurnVar(cmd.getTurn(), cmd.getGameStage());
-
+                //display the entire deck with assocaited status color coded
+                //for example; CAP is Black with green border.
                 updDeckDsp(cardStatus);
+                updHandCnts();
+                // evaluate options routine
+                displayHyptoLstV("Turn " +cmd.getTurn());
+                displayHyptoLstV("handSort0 "+handCapSort.get(0));
+                displayHyptoLstV("hand0 "+handCap.get(0));
+                displayHyptoLstV("handDiss0 "+handDissOppLst.get(0));
+                if (handDissOppLst.size()>1)
+                displayHyptoLstV("handDiss1 "+handDissOppLst.get(1));
+                displayHyptoLstV("handOpp0 "+handOppLst.get(0));
+                if(cmd.getTurn()) {
+                    switch (cmd.getGameStage()) {
+                        case "ADDREMOVE":
+                            updEvalPane(handDissOppLst.get(0));
+                            break;
+                        case "PASSING":
+                            updEvalPane(handDissOppLst.get(0));
+                            break;
+                        case "LOADING":
+                            updEvalPane("");
+                            break;
+                        case "PLAYING":
+                            if (!handCap.get(0).equals("")) { // Deck Command issued
+                                updEvalPane(handCap.get(0));
+                            } else
+                                updEvalPane(handDissOppLst.get(1));
+                            break;
+                        default:
+                            break;
+                    }
+                } else updEvalPane(""); // clear the eval pane
+
+               // if(!cmd.getGameStage().equals("DEALING")) updEvalPane();
+            }
+        });
+    }
+    private void updEvalPane(String optCard) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                int cardIdx = cmd.getStrIdx(optCard, cmd.deckStr);
+                Image img = cardImg.getImage(cardIdx, optCard);
+                playImg01.setImage(img);
+
+                List<String> optLstKep = new ArrayList<>();
+                List<String> justStar = new ArrayList<>();
+                // dspPossLstV("optLst crt ");
+                // create a list of card without the "*"
+                if (!optCard.equals("")) {
+                    for (int i =0;i<handCapSortFlag.size();i++) {
+                        if (!handCapSortFlag.get(i).equals("*")) {
+                            // Remove the "*" cards
+                            if (!handCapSort.get(i).equals(""))
+                                optLstKep.add(handCapSort.get(i));
+                        } else { // Save the "*" cards
+                            justStar.add(handCapSort.get(i));
+                        }
+                    }
+                }
+                // cycle through the non "*" cards replacing each with the
+                // pile card or deck card call the options routine and return
+                // the number of combinations and the hand deadwood counts
+                List<String> optLstResult = new ArrayList<>();
+                for (int i =0;i<optLstKep.size();i++) {
+                    LinkedList<String> optLstIn = new LinkedList<>();
+                    for (int j =0;j<optLstKep.size();j++) {
+                        if(i==j) {
+                            optLstIn.add(optCard);
+                        } else {
+                            optLstIn.add(optLstKep.get(j));
+                        }
+                    }
+                    // add the saved "*' cards
+                    for (String s: justStar) optLstIn.add(s);
+                /*    displayHyptoLstV("optLstIn crt "+i);
+                    for (String s: optLstIn) dspPossLstV(s);
+                    displayHyptoLstV(handDissOppLst.get(0)
+                            +" for "+optLstKep.get(i)+" "+cmd.evalOptions(optLstIn));*/
+                    // add the results to an array
+                    optLstResult.add(optLstKep.get(i)+" "+cmd.evalOptions(optLstIn));
+                }
+                // Result format <ACE[0] CLUB[1]> <combs[2]> <rank[3]> <suit[4]>
+                //  for (String s: optLstResult) displayHyptoLstV(s);
+                // Calculate the percentage change with the optional card
+                List<String> optLstSorted = new ArrayList<>();
+                int totChg = 0;
+                for (int i=0;i<optLstResult.size();i++) {
+                    String[] spl = optLstResult.get(i).split("\\s+");
+                    // change in combinations
+                    int finV = Integer.parseInt(spl[2]);
+                    int combChg = finV-cmd.getPossibilities();
+                    // change in deadwood must be based on a single value
+                    // so use the lower of the two rank / suit
+                    if (Integer.parseInt(spl[3])<Integer.parseInt(spl[4])) {
+                        finV = Integer.parseInt(spl[3]);
+                    } else finV = Integer.parseInt(spl[4]);
+                    int handChg = 0;
+                    if (cmd.getRankCnt()<cmd.getSuitCnt()) {
+                        handChg = (finV-cmd.getRankCnt())*-1;
+                    } else handChg = (finV-cmd.getSuitCnt())*-1;
+
+                    totChg = combChg+handChg;
+                    //displayHyptoLstV("totChg*****");
+                    //displayHyptoLstV(totChg+ " "+optLstResult.get(i));
+                    int sortTotChg =0;
+                    if (totChg<=0) sortTotChg =0;
+                    if (totChg>0) sortTotChg =totChg;
+                    //  displayHyptoLstV(optLstResult.get(i)+" "+totChg);
+                    String splChg = String.format("%02d", sortTotChg);
+                    String splCombs = String.format("%02d", Integer.parseInt(spl[2]));
+                    optLstSorted.add("1" + splCombs + splChg + "!" + optLstResult.get(i)+" "+totChg);
+
+                }
+                Collections.sort(optLstSorted);
+                Collections.reverse(optLstSorted);
+                  displayHyptoLstV("**********");
+                  for (String s: optLstSorted) displayHyptoLstV(s);
+                for (int i=0;i<5;i++) {
+                    choiceImgV.get(i).setImage(null);
+                    combsCnt.get(i).setText("");
+                    rankCnt.get(i).setText("");
+                    suitCnt.get(i).setText("");
+                    chgCnt.get(i).setText("");
+                    if (i<optLstSorted.size()) {
+                        if (!optLstSorted.get(i).equals("")) {
+                            // eg. "00!ACE CLUB *"
+                            String[] spl = optLstSorted.get(i).split("!");
+                            // eg. [00] [ACE CLUB *]
+                            String[] spl2 = spl[1].split("\\s+");
+                            String card = spl2[0]+" "+spl2[1];
+                            cardIdx = cmd.getStrIdx(card, cmd.deckStr);
+                            img = cardImg.getImage(cardIdx, card);
+                            choiceImgV.get(i).setImage(img);
+                            combsCnt.get(i).setText(spl2[2]);
+                            rankCnt.get(i).setText(spl2[3]);
+                            suitCnt.get(i).setText(spl2[4]);
+                            chgCnt.get(i).setText(spl2[5]);
+                        }
+                    }
+                }
+            }
+        });
+    }
+    private void updHandCnts() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                rankCnt01.setText(String.valueOf(cmd.getRankCnt()));
+                suitCnt01.setText(String.valueOf(cmd.getSuitCnt()));
+                combs01.setText(String.valueOf(cmd.getPossibilities()));
             }
         });
     }
@@ -260,6 +435,13 @@ public class GinController implements Initializable {
             @Override
             public void run() {
                 for (String s : lst) displayHyptoLstV(s);
+                // testing debugging
+             /*   dspPossLstV("dissOpp0 "+handDissOppLst.get(0));
+                dspPossLstV("handCap0 "+handCapLst.get(0));
+                dspPossLstV("handOpp0 "+handOppLst.get(0));
+                if (handDissOppLst.size()>1)
+                    dspPossLstV("dissOpp1 "+handDissOppLst.get(1));
+                dspPossLstV("-------------");*/
                 cmd.resetMsgQueue();
             }
         });
@@ -377,6 +559,16 @@ public class GinController implements Initializable {
             }
         });
     }
+    public void dspPossLstV(String str) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                possItems.add(str);
+                possLstV.setItems(possItems);
+                possLstV.scrollTo(possLstV.getItems().size());
+            }
+        });
+    }
     public void updDeckPileImg() {
         Platform.runLater(new Runnable() {
             @Override
@@ -406,7 +598,6 @@ public class GinController implements Initializable {
                     img = cardImg.getImage(cardIdx);
                     pileImg.setImage(img);
                 }
-
             }
         });
     }
@@ -425,64 +616,11 @@ public class GinController implements Initializable {
                             int cardIdx = cmd.getStrIdx(lst.get(i), cmd.deckStr);
                             img = cardImg.getImage(cardIdx);
                             // check for 3or4 so seq and update stackpane border
-                            if (sort) if (handCapSort.get(i).equals("*")) spLst.get(i).setStyle("-fx-border-color: darkblue;");
+                            if (sort) if (handCapSortFlag.get(i).equals("*")) spLst.get(i).setStyle("-fx-border-color: darkblue;");
                         }
                     }
 
                     lstImgv.get(i).setImage(img);
-                }
-            }
-        });
-    }
-
-    public void updHandDsp(List<Label> lstLabel, List<String> lst) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-
-                for (int i=0; i<lstLabel.size(); i++){
-                    lstLabel.get(i).setText("");
-                }
-                for (int i=0; i<lst.size(); i++){
-                    lstLabel.get(i).setText(lst.get(i));
-                }
-            }
-        });
-    }
-    public void displayHands(String str, List<Label> lstLabel, List<String> lst) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                // display the cap cards
-                String[] spl = str.split("\\s+");
-                if (spl.length==3) { // it's a card
-                    lstLabel.get(Integer.parseInt(spl[2])).setText(spl[0] + " " + spl[1]);
-                } else { // it's a command
-                    if (spl.length==1) { // is a deal command
-                        if (spl[0].equals("DEAL") || spl[0].equals("SORTRANK") ||spl[0].equals("SORT")) {
-                            for (int i=0; i<11; i++){
-                                lstLabel.get(i).setText("");
-                            }
-                            if (spl[0].equals("SORT") || spl[0].equals("SORTRANK")) {
-                                for (int i=0; i<lst.size(); i++){
-                                    lstLabel.get(i).setText(lst.get(i));
-
-                                }
-                            }
-                        }
-
-                    } else { // it's another command
-                        //  if (spl[0].equals("REMOVE")) {
-                        for (int i=0; i<11; i++){
-                            lstLabel.get(i).setText("");
-                        }
-                        for (int i=0; i<lst.size(); i++){
-                            lstLabel.get(i).setText(lst.get(i));
-                        }
-
-                        //  }
-                    }
-
                 }
             }
         });
@@ -517,10 +655,11 @@ public class GinController implements Initializable {
                 if(cmdSuit2.getValue()!=null) sb.append(cmdSuit2.getValue()).append(" ");
 
                 displayHyptoLstV("Submit command ...\n"+sb);
-                List<String> resultList = cmd.splitResult(sb.toString());
+                processResult(sb.toString());
+               /* List<String> resultList = cmd.splitResult(sb.toString());
                 for (String s : resultList) displayResultLstV(s);
 
-                updBorderPane();
+                updBorderPane();*/
 
                 cmdType1.setValue(null);
                 cmdRank1.setValue(null);
@@ -555,13 +694,21 @@ public class GinController implements Initializable {
                 }
                 List<String> ginTest = stream != null ? stream.collect(Collectors.toList()) : null;
 
+                StringBuilder sb = new StringBuilder();
                 for (String s : ginTest) {
-                    processResult(s);
-                  //  List<String> resultList = cmd.splitResult(s);
-                  //  for (String ss : resultList) displayResultLstV(ss);
-                   // updBorderPane();
-                }
+                    sb.append(s+" ");
 
+                  /*  if (s.equals("PASS")) try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                      List<String> resultList = cmd.splitResult(s);
+                    for (String ss : resultList) displayResultLstV(ss);
+                    updBorderPane();*/
+                }
+                processResult(sb.toString());
+               // processResult(s);
             }
         });
     }
@@ -569,10 +716,8 @@ public class GinController implements Initializable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                displayHyptoLstV("HandCapLst ...");
-                for (String s : handCapLst) {
-                    displayHyptoLstV(s);
-                }
+                displayHyptoLstV("Run updBorderPane adhoc ...");
+                updBorderPane();
             }
         });
     }
@@ -582,7 +727,6 @@ public class GinController implements Initializable {
             public void run() {
                 if(fstStep) {
                     fstStep = false;
-
                     stepTestIdx = 0;
                     Stream<String> stream = null;
                     try {
@@ -643,6 +787,39 @@ public class GinController implements Initializable {
         capImageVSP.add(capImg10SP);
 
     }
+    private void loadChoiceImgV() {
+        choiceImgV.add(choiceImg02);
+        choiceImgV.add(choiceImg03);
+        choiceImgV.add(choiceImg04);
+        choiceImgV.add(choiceImg05);
+        choiceImgV.add(choiceImg06);
+    }
+    private void loadEvalCnt() {
+
+        rankCnt.add(rankCnt02);
+        rankCnt.add(rankCnt03);
+        rankCnt.add(rankCnt04);
+        rankCnt.add(rankCnt05);
+        rankCnt.add(rankCnt06);
+
+        suitCnt.add(suitCnt02);
+        suitCnt.add(suitCnt03);
+        suitCnt.add(suitCnt04);
+        suitCnt.add(suitCnt05);
+        suitCnt.add(suitCnt06);
+
+        combsCnt.add(combs02);
+        combsCnt.add(combs03);
+        combsCnt.add(combs04);
+        combsCnt.add(combs05);
+        combsCnt.add(combs06);
+
+        chgCnt.add(chg02);
+        chgCnt.add(chg03);
+        chgCnt.add(chg04);
+        chgCnt.add(chg05);
+        chgCnt.add(chg06);
+    }
     private void loadOppImgV() {
         oppImageV.add(oppImg00);
         oppImageV.add(oppImg01);
@@ -655,7 +832,6 @@ public class GinController implements Initializable {
         oppImageV.add(oppImg08);
         oppImageV.add(oppImg09);
         oppImageV.add(oppImg10);
-
     }
     private void loadOppImgVSP() {
         oppImageVSP.add(oppImg00SP);
